@@ -93,16 +93,16 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
   }, [])
 
   return (
-    <div className="bg-white px-5 pt-4 pb-8">
+    <div className="bg-white px-2 pt-4 pb-4">
       <h1 className="text-center text-[#2c2c2c] text-2xl font-bold font-sans mb-4">Unlock Your Exclusive Perfume Deal</h1>
-      <div className="flex justify-center mb-6"><span className="text-sm text-wrap text-center text-gray-500">Answer six quick questions and save up to £120 — available only online, for a limited time.</span></div>
+      <div className="flex justify-center mb-4"><span className="text-sm text-wrap text-center text-gray-500">Answer six quick questions and save up to £120 — available only online, for a limited time.</span></div>
 
 
 
       
       {/* New Temu-style Layout */}
       <div className="flex items-center justify-between mb-4">
-        <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-blue-200">
+        <div className="w-20 h-20 rounded-lg overflow-hidden border-1 border-[#20ca97]">
           <Image
             src="/3-caixas.png"
             alt="temu box"
@@ -125,10 +125,10 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
         </div>
       </div>
 
-              <div className="border-t-2 border-blue-200 pt-6">
+              <div className="border-t-2 border-[#13ce67] pt-6">
           <h3 className="text-center text-[#2c2c2c] text-2xl font-bold font-sans mb-2">Perfumes we still have in stock:</h3>
         
-        <div className="w-full overflow-hidden bg-gray-100 pb-4 mb-4">
+        <div className="w-full overflow-hidden pb-4 mb-4">
           <div className="relative">
             <div 
               className="flex transition-none" 
@@ -168,7 +168,7 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
           <div className="mt-6">
             <button
               onClick={() => onBuyClick(selectedKit)}
-              className="w-full bg-[#18d431] hover:bg-[#33ff00] shadow-xl shadow-gray-500/35 hover:shadow-green-200 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
+              className="w-full bg-[#2ed418] hover:bg-[#33ff00] shadow-xl shadow-gray-500/35 hover:shadow-green-200 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
             >
               Buy Now – Get This Perfume Kit
             </button>

@@ -43,7 +43,7 @@ const Newsletter = () => {
                 ANMELDEN
               </button>
             </div>
-            <p className="text-xs text-gray-400 mt-4 text-left">
+            <p className="text-xs text-gray-300 mt-4 text-left">
               * Pflichtfeld. Mit der Anmeldung akzeptierst du unsere Datenschutzbestimmungen.
             </p>
           </form>

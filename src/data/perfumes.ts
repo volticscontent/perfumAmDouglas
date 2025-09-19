@@ -13,6 +13,7 @@ export interface Perfume {
   notes: string[];
   inStock: boolean;
   isGift?: boolean;
+  isNew?: boolean;
   slug: string;
 }
 
@@ -64,6 +65,7 @@ export const perfumes: Perfume[] = [
     description: 'Ein träumerischer und süßer Duft mit fruchtigen Noten.',
     notes: ['Kirsche', 'Mandel', 'Vanille', 'Karamell', 'Sandelholz'],
     inStock: true,
+    isNew: true,
     slug: 'ariana-grande-rem-cherry-eclipse'
   },
   {
@@ -95,6 +97,7 @@ export const perfumes: Perfume[] = [
     description: 'Freiheit und Eleganz in einem luxuriösen Vanille-Duft.',
     notes: ['Bergamotte', 'Lavendel', 'Vanille', 'Tonkabohne', 'Ambergris'],
     inStock: true,
+    isNew: true,
     slug: 'ysl-libre-vanille-couture'
   },
   {

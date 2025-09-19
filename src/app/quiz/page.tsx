@@ -116,7 +116,7 @@ const progressBarStyles = `
 
   .progress-bar {
     height: 100%;
-    background: linear-gradient(to right, #ca2020, #ff0000);
+    background: linear-gradient(to right, #20ca97, #00ffb3);
     border-radius: 9999px;
     transition: width 0.1s linear;
   }
@@ -126,9 +126,18 @@ const progressBarStyles = `
 declare global {
   interface Window {
     TiktokAnalyticsObject?: string;
-    ttq?: any;
-    _fbq?: any;
-    fbq?: any;
+    ttq?: {
+      track: (event: string, data?: Record<string, unknown>) => void;
+      page: () => void;
+      identify: (data: Record<string, unknown>) => void;
+    };
+    _fbq?: {
+      push: (args: unknown[]) => void;
+    };
+    fbq?: {
+      (action: string, event: string, data?: Record<string, unknown>): void;
+      push: (args: unknown[]) => void;
+    };
     pixelId?: string;
   }
 }
@@ -243,7 +252,7 @@ const SuccessNotification = ({ show, onClose }: { show: boolean; onClose: () => 
         </div>
         <div>
           <p className="font-bold text-lg">Congratulations! 🎉</p>
-          <p className="text-sm opacity-90">You've earned a £20 discount!</p>
+          <p className="text-sm opacity-90">You&apos;ve earned a £20 discount!</p>
         </div>
         <button 
           onClick={onClose}
@@ -299,7 +308,7 @@ const LoadingSpinner = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
   }
   
   return (
-    <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-[#f00] border-t-white`}></div>
+    <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-[#4feb95] border-t-white`}></div>
   )
 }
 
@@ -539,7 +548,13 @@ const useAudioSystem = () => {
           audioRef.current = audio;
 
           // Inicializa o contexto de áudio para dispositivos móveis
-          const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
+          const AudioContext = (window as Window & {
+            AudioContext?: typeof window.AudioContext;
+            webkitAudioContext?: typeof window.AudioContext;
+          }).AudioContext || (window as Window & {
+            AudioContext?: typeof window.AudioContext;
+            webkitAudioContext?: typeof window.AudioContext;
+          }).webkitAudioContext;
           if (AudioContext) {
             const audioContext = new AudioContext();
             if (audioContext.state === "suspended") {
@@ -821,8 +836,7 @@ export default function WWESummerSlamQuiz() {
     
     // Links dos produtos baseados no kit selecionado
     const productLinks = {
-      "john-cena": "https://wwefanstore.shop/john-cena-kit",
-      "cody-rhodes": "https://wwefanstore.shop/cody-rhodes-kit"
+      "john-cena": "http://localhost:3000/",
     };
     
     const url = productLinks[selectedKit as keyof typeof productLinks] || productLinks["john-cena"];
@@ -936,20 +950,20 @@ export default function WWESummerSlamQuiz() {
           <CompleteHeader onUSPClick={handleUSPClick} />
           <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
           <div className="flex-grow">
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-2 py-10">
               <div className="text-center mb-10 animate-fadeIn">
-                <h1 className="text-4xl font-normal font-product-sans text-gray-900">Message from The Perfume Shop CEO</h1>
+                <h1 className="text-4xl font-normal font-thin text-gray-900">Message from The Perfume Shop CEO</h1>
               </div>
               
-              <div className="space-y-8">
+              <div className="space-y-10">
                 <div className="animate-scaleIn">
                   {/* <VideoPlayer isReady={true} /> */}
                   <VideoPlayer isReady={true} />
                 </div>
 
-                <div className="bg-gradient-to-br font-product-sans from-[#000000da] via-[#00130dda] to-[#000000] border-[2px] p-3 rounded-xl shadow-sm animate-slideIn animated-border">
-                  <blockquote className="text-xl md:text-lg text-[#ffffff] text-center leading-relaxed">
-                    "Answer 6 questions about your perfume preferences and get £120 off a set of perfumes."
+                <div className="bg-[#9bdcd2] text-center py-5 px-5 text-sm relative rounded-xl">
+                  <blockquote className="text-1xl md:text-lg text-[#020202] font-thin text-center leading-relaxed">
+                    &quot;Answer 6 questions about your perfume preferences and get £120 off a set of perfumes.&quot;
                   </blockquote>
                 </div>
 
@@ -1009,15 +1023,15 @@ export default function WWESummerSlamQuiz() {
       <div className="min-h-screen bg-white flex flex-col">
         <CompleteHeader onUSPClick={handleUSPClick} />
         <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
-        <div className="flex-grow container mx-auto px-1 py-4">
+        <div className="flex-grow container mx-auto px-1 py-5">
           <SuccessNotification show={showNotification} onClose={() => setShowNotification(false)} />
 
           <div className="w-full max-w-2xl mx-auto">
             <div className="mb-6 animate-fadeIn">
-              <div className="flex justify-center mb-6">
+              <div className="flex justify-center mb-4">
                 <div className="text-center">
                   <p className="text-sm text-gray-600">Your discount</p>
-                  <p className={`text-2xl font-bold text-[#4dca1b] transform transition-all duration-500 ${
+                  <p className={`text-2xl font-bold text-[#4ada12] transform transition-all duration-500 ${
                     correctAnswers > 0 ? 'scale-125 animate-pulse' : ''
                   }`}>
                     £{correctAnswers * 20}
@@ -1038,7 +1052,7 @@ export default function WWESummerSlamQuiz() {
             <div className="space-y-4">
               <div className="animate-slideIn">
                 {questions[currentQuestion] && (
-                  <div className="bg-[#ffffff] p-6 rounded-xl border border-gray-900 shadow-sm transition-all duration-300 hover:shadow-md mb-4">
+                  <div className="bg-[#ffffff] p-10 rounded-xl border border-gray-900 shadow-sm transition-all duration-300 hover:shadow-md mb-4">
                     <h3 className="text-xl font-semibold mb-4 text-black border-b border-gray-900 pb-2">{questions[currentQuestion].question}</h3>
 
                     <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer} className="space-y-4">
@@ -1099,10 +1113,11 @@ const DiscountProgressBar = ({ correctAnswers }: { correctAnswers: number }) => 
   const progressPercentage = (discount / maxDiscount) * 100;
 
   return (
-    <div className="bg- p-4 rounded-lg">
-      <div className="flex justify-between items-center">
-        <span className="text-sm text-gray-600">Discount progress:</span>
-        <span className="font-semibold">£{discount} / £{maxDiscount}</span>
+    <div className="bg-[#ffffff] p-4 rounded-lg">
+      <div className="flex justify-center items-center">
+        <span className="text-sm text-gray-600 mr-10">Discount progress:</span>
+        <span className="font-semibold text-gray-600">£{discount} / </span>
+        <span className="text-[#26ca20] font-bold ml-5">£{maxDiscount}</span>
       </div>
       <div 
         aria-valuemax={100} 

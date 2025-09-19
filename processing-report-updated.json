@@ -1,0 +1,47 @@
+{
+  "processing_summary": {
+    "total_products": 44,
+    "timestamp": "2024-01-15T10:00:00Z",
+    "status": "completed_with_brand_updates"
+  },
+  "brand_statistics": {
+    "total_brands": 38,
+    "brand_distribution": {
+      "Paco Rabanne": 11,
+      "Carolina Herrera": 10,
+      "Dior": 9,
+      "Chanel": 8,
+      "Giorgio Armani": 8,
+      "Yves Saint Laurent": 7,
+      "Bulgari": 6,
+      "Jean Paul Gaultier": 5,
+      "Versace": 5,
+      "Lancôme": 5,
+      "Givenchy": 4,
+      "Mugler": 4,
+      "Creed": 4,
+      "Gucci": 3,
+      "Dolce & Gabbana": 2
+    }
+  },
+  "category_statistics": {
+    "total_categories": 3,
+    "category_distribution": {
+      "Duft-Sets": 37,
+      "WoHerren Dufts": 2,
+      "Herren Dufts": 5
+    }
+  },
+  "price_statistics": {
+    "min_price": 59.9,
+    "max_price": 59.9,
+    "avg_price": 59.9,
+    "currency": "EUR"
+  },
+  "quality_metrics": {
+    "products_with_brands": 44,
+    "products_with_descriptions": 44,
+    "products_with_images": 44,
+    "multi_brand_remaining": 0
+  }
+}

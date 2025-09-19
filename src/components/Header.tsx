@@ -3,14 +3,42 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export default function Header() {
+interface HeaderProps {
+  onSearch?: (query: string) => void;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
+}
+
+export default function Header({ onSearch, searchValue: externalSearchValue, onSearchChange }: HeaderProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [internalSearchValue, setInternalSearchValue] = useState('');
+  
+  const searchValue = externalSearchValue !== undefined ? externalSearchValue : internalSearchValue;
+  
+  const handleSearchChange = (value: string) => {
+    if (onSearchChange) {
+      onSearchChange(value);
+    } else {
+      setInternalSearchValue(value);
+    }
+  };
+  
+  const handleSearch = () => {
+    if (onSearch && searchValue.trim()) {
+      onSearch(searchValue.trim());
+    }
+  };
+  
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <header className="w-full">
       {/* Banner Promocional */}
-      <div className="bg-[#9bdcd2] text-black text-center py-3 px-5 text-sm relative">
+      <div className="bg-[#9bdcd2] text-black text-center py-3 px-9 text-sm relative">
         <span className="font-thin">Sale Sunday: Bis zu -55% auf über 350 Topseller!</span>
         <span className="ml-2 text-xs opacity-75">ℹ️</span>
       </div>
@@ -33,7 +61,7 @@ export default function Header() {
             {/* Logo Douglas */}
             <div className="flex-1 flex justify-center lg:flex-none lg:justify-start">
               <Link href="/" className="flex items-center py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 130 24" className="h-8 w-auto max-w-[130px]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 130 25" className="h-8 w-auto max-w-[130px]">
                   <path fillRule="evenodd" d="M68.201 15.025v-2.14l13.308-.001c.067 6.289-4.57 10.972-11.04 10.972-6.837 0-11.64-4.965-11.64-11.942C58.83 5.156 63.8.038 70.47.038c4.937 0 9.039 2.81 10.44 7.326h-2.435C77.14 4.086 74.138 2.18 70.469 2.18c-5.47 0-9.371 4.08-9.371 9.734 0 5.673 3.835 9.735 9.371 9.735 4.37 0 7.671-2.643 8.505-6.624H68.201Zm-49.06-13.18A11.468 11.468 0 0 1 25.378.04c6.703 0 11.739 5.118 11.739 11.91 0 6.79-5.036 11.909-11.74 11.909-6.77 0-11.672-5.018-11.672-11.91a12.018 12.018 0 0 1 1.767-6.322c.61.444 1.131 1 1.534 1.639a10.62 10.62 0 0 0-1.033 4.683c0 5.654 3.935 9.702 9.405 9.702 5.536 0 9.472-4.048 9.472-9.702 0-5.687-3.936-9.768-9.472-9.768a9.521 9.521 0 0 0-4.703 1.171 9.348 9.348 0 0 0-1.534-1.505Zm34.886 15.523c.25-.927.373-1.884.367-2.844V.508h2.268v14.184c0 1.17-.166 2.609-.467 3.545-1.134 3.48-3.969 5.62-8.238 5.62-4.27 0-7.137-2.074-8.238-5.553a13.001 13.001 0 0 1-.5-3.546V.508h2.268v14.016c-.006.96.117 1.917.366 2.844.8 2.743 3.069 4.282 6.07 4.282 3.035 0 5.304-1.54 6.104-4.282Zm-39.155 2.977a8.705 8.705 0 0 1-1.935.602 17.575 17.575 0 0 1-3.635.302H2.398V2.615h6.904a17.573 17.573 0 0 1 3.635.302c4.37.936 6.77 4.114 6.77 9.032a11.16 11.16 0 0 1-.933 4.683c.408.654.915 1.24 1.5 1.74 1.101-1.807 1.702-4.014 1.702-6.423 0-5.954-3.135-9.902-8.472-11.073A17.67 17.67 0 0 0 9.636.508H.13V23.39h9.506c1.297.03 2.595-.082 3.868-.334a11.244 11.244 0 0 0 2.868-1.037 7.186 7.186 0 0 1-1.5-1.673ZM120.764 9.94l2.402 1.171c2.467 1.204 4.834 2.845 4.834 6.491 0 3.646-2.601 6.256-6.503 6.256-4.002 0-6.87-2.342-7.237-7.393h2.269c.4 3.645 2.335 5.184 5.003 5.184 2.467 0 4.135-1.606 4.135-3.947 0-2.342-1.568-3.647-3.302-4.45l-2.434-1.138c-2.83-1.32-4.636-3.228-4.636-6.22 0-3.28 2.468-5.855 6.037-5.855 3.234 0 5.802 1.974 6.203 6.39H125.4c-.366-2.643-1.701-4.316-4.069-4.316-2.301 0-3.769 1.539-3.769 3.68 0 1.921 1.16 3.152 3.202 4.147ZM103.321.508l-8.838 22.881h2.535l2.701-7.258h9.405l2.735 7.258h2.602L105.589.508h-2.268Zm-2.802 13.48h7.805l-2.602-7.024a81.731 81.731 0 0 1-1.3-3.714c-.4 1.238-.801 2.476-1.268 3.714l-2.635 7.025ZM85.945.509h-2.268v22.881h9.138l.9-2.14h-7.77V.507Z" clipRule="evenodd"/>
                 </svg>
               </Link>
@@ -47,14 +75,15 @@ export default function Header() {
                   className="w-full h-12 px-5 pr-14 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:bg-white focus:border-gray-300 focus:shadow-md text-sm placeholder-gray-500 transition-all duration-300 hover:bg-white hover:shadow-sm"
                   placeholder="Hallo, wonach suchst du?"
                   value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setIsSearchFocused(false)}
+                  onKeyPress={handleKeyPress}
                 />
                 <button
                   type="button"
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
-                  onClick={() => console.log('Search:', searchValue)}
+                  onClick={handleSearch}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -95,22 +124,23 @@ export default function Header() {
       </div>
 
       {/* Barra de Pesquisa Mobile */}
-        <div className="lg:hidden px-2 py-2 border-t border-gray-200">
+        <div className="lg:hidden border-gray-200">
           <div className="relative">
             <input
               type="text"
-              className="w-full h-12 px-5 pr-14 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:bg-white focus:border-gray-300 focus:shadow-md text-sm placeholder-gray-500 transition-all duration-300 hover:bg-white hover:shadow-sm"
+              className="w-full h-14 px-6 pr-14 bg-gray-50 border-y border-gray-200 focus:outline-none focus:bg-white focus:border-gray-300 focus:shadow-md text-sm placeholder-gray-500 transition-all duration-300 hover:bg-white hover:shadow-sm"
               placeholder="Hallo, wonach suchst du?"
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             <button
               type="button"
               className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
-              onClick={() => console.log('Search:', searchValue)}
+              onClick={handleSearch}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="black" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
           </div>
