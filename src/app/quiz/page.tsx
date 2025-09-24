@@ -27,23 +27,23 @@ const progressBarStyles = `
   @keyframes borderGlow {
     0% {
       border-color: #ff0000;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+
     }
     25% {
       border-color: #ff6600;
-      box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+
     }
     50% {
       border-color: #ffff00;
-      box-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+
     }
     75% {
       border-color: #ff6600;
-      box-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
+
     }
     100% {
       border-color: #ff0000;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+
     }
   }
 

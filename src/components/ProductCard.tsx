@@ -81,7 +81,7 @@ const ProductCard = ({ perfume }: ProductCardProps) => {
 
           {/* Price */}
           <div className="mb-4">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-1 mb-1">
               <span className="text-black font-medium text-lg">
                 {perfume.currentPrice.toFixed(2)} €
               </span>

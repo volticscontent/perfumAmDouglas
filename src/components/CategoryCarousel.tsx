@@ -157,7 +157,7 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
           <button
             key={category.id}
             type="button"
-            className={`flex items-center gap-2 px-3 py-[0.85rem] text-sm font-thin border transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1 px-4 py-[1.02rem] text-sm font-thin border transition-all whitespace-nowrap ${
               isActive
                 ? 'bg-black text-white border-black'
                 : 'bg-white text-gray-700 border-black hover:bg-gray-50 hover:border-gray-400'

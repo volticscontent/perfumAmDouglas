@@ -16,16 +16,6 @@ const PerfumeInfo = () => {
         {/* Zenloop Rating Element */}
         <div className="zenloop-wrapper mb-12 bg-white">
           <style jsx>{`
-            .zl-overlay {
-              position: relative;
-              background: white;
-              border-radius: 12px;
-              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-              max-width: 500px;
-              margin: 0 auto;
-              overflow: hidden;
-            }
-            
             .zl-dialog {
               position: relative;
               width: 100%;
@@ -102,23 +92,19 @@ const PerfumeInfo = () => {
               height: 80px;
               border-radius: 50%;
               background: #ffffff;
-              border: 3px solid #e9ecef;
               text-decoration: none;
               transition: all 0.3s ease;
               cursor: pointer;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             
             .zl-score:hover {
               transform: scale(1.05);
               border-color: #53CDB5;
               background: #f0fffe;
-              box-shadow: 0 4px 16px rgba(83, 205, 181, 0.3);
             }
 
             .zl-score.selected {
               transform: scale(1.1);
-              box-shadow: 0 8px 25px rgba(0,0,0,0.3);
               border-width: 4px;
             }
 
@@ -256,7 +242,7 @@ const PerfumeInfo = () => {
           `}</style>
           <div id="zl-container">
             <div>
-              <div className="zl-overlay zl-style-bottom zl-embed">
+              <div className="zl-style-bottom zl-embed">
                 <div id="zl-dialog" className="zl-dialog">
                   <div className="zl-pages">
                     <div className="zl-line" style={{backgroundColor: 'rgb(2, 25, 60)'}}></div>
@@ -397,7 +383,7 @@ const PerfumeInfo = () => {
 
         {/* Seção sobre tipos de notas */}
         <div className="mb-12 bg-white pt-5">
-          <h2 className="text-2xl font-medium text-black uppercase mb-8 text-center">
+          <h2 className="text-2xl font-medium text-black uppercase mb-8 right px-5">
             WAS UNTERSCHEIDET EAU DE TOILETTE, EAU DE PARFUM UND CO.?
           </h2>
           <p className="text-gray-700 mb-6 px-4 leading-relaxed">

@@ -164,8 +164,8 @@ export default function Home() {
                     <div className="aspect-square w-[100%] relative overflow-hidden">
                       <div className="absolute inset-0 bg-[#f5f5f5]"></div>
                       {product.images && product.images.length > 0 ? (
-                        <div className="absolute inset-0 flex items-center justify-center p-4">
-                          <div className="relative w-full h-[120%] bg-[#f5f5f5] rounded-lg">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="relative w-full h-[100%] bg-[#f5f5f5] rounded-lg">
                             <Image
                               src={product.images[0]}
                               alt={product.title}

@@ -39,7 +39,7 @@ const Footer = () => {
         </div>
 
         {/* Links principais */}
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-4 gap-8 mb-8 px-2">
           <div>
             <h4 className="font-medium text-black mb-4">Kundenservice</h4>
             <ul className="space-y-2 text-sm text-gray-600">
