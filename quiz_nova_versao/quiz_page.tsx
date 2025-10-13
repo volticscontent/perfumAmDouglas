@@ -154,42 +154,42 @@ const questions: Question[] = [
   {
     id: 1,
     question: "When choosing the perfect perfume, what matters most to you?",
-    options: ["The scent / fragrance notes 🌸", "How long it lasts on skin ⏳", "The brand ✨", "The price 💶"],
+    options: ["The scent / fragrance notes 🌸", "How long it lasts on the skin ⏳", "The brand ✨", "The price 💷"],
     correct: 0,
-    explanation: "Fragrance notes are the heart of any great perfume!",
+    explanation: "The fragrance notes are the heart of any great perfume!",
   },
   {
     id: 2,
     question: "Where do you usually discover new perfumes?",
-    options: ["In stores 🏬", "Social media 📱", "Online ads 💻", "Friends or family 👥"],
+    options: ["In physical stores 🏬", "On social media 📱", "Through online ads 💻", "From friends or family 👥"],
     correct: 0,
-    explanation: "Stores offer the best experience to test and discover new fragrances!",
+    explanation: "Physical stores offer the best experience to test and discover new scents!",
   },
   {
     id: 3,
     question: "How often do you buy a new perfume?",
-    options: ["Once a year", "2-3 times a year", "Every season (4 times a year)", "Monthly or more"],
+    options: ["Once a year", "Two to three times a year", "Every season (four times a year)", "Monthly or more"],
     correct: 0,
-    explanation: "Taking time to choose the perfect perfume makes every purchase special!",
+    explanation: "Taking time to choose the perfect perfume makes each purchase special!",
   },
   {
     id: 4,
-    question: "What influences your decision most when buying a new perfume?",
-    options: ["Friends or family recommendations", "Online reviews", "Testing in store", "Promotions or discounts"],
+    question: "What influences your decision the most when buying a new perfume?",
+    options: ["Recommendations from friends or family", "Online reviews", "Testing in store", "Promotions or discounts"],
     correct: 0,
     explanation: "Personal recommendations from trusted people are invaluable when choosing fragrances!",
   },
   {
     id: 5,
-    question: "What type of promotion interests you most?",
-    options: ["Direct discount on price", "Multi-product sets", "Free samples with purchase", "Cashback or loyalty points"],
+    question: "Which type of promotion interests you the most?",
+    options: ["Direct discount on price", "Multi-product kits", "Free samples with purchase", "Cashback or loyalty points"],
     correct: 0,
-    explanation: "Direct discounts provide immediate value for your favorite fragrances!",
+    explanation: "Direct discounts provide immediate value on your favorite fragrances!",
   },
   {
     id: 6,
-    question: "Do you usually buy perfumes for yourself or as gifts?",
-    options: ["For myself 🎁", "As gifts 🎀", "Both equally ⚖️", "Depends on occasion 🗓️"],
+    question: "Do you usually buy perfumes more for yourself or as gifts?",
+    options: ["For myself 🎁", "As a gift 🎀", "Both equally ⚖️", "Depends on the occasion 🗓️"],
     correct: 0,
     explanation: "Treating yourself to a beautiful fragrance is always a wonderful choice!",
   },
@@ -991,7 +991,7 @@ export default function WWESummerSlamQuiz() {
           <div className="flex-grow">
             <div className="container mx-auto px-2 py-10">
               <div className="text-center mb-10 animate-fadeIn">
-                <h1 className="text-4xl font-normal font-thin text-gray-900">Message from The Perfume Shop CEO</h1>
+                <h1 className="text-4xl font-normal font-thin text-gray-900">Mach das Quiz und erhalte bis zu 120 € Rabatt (Faça o quiz e ganhe ate 120 euros de desconto)</h1>
               </div>
               
               <div className="space-y-10">
@@ -1127,10 +1127,10 @@ export default function WWESummerSlamQuiz() {
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
                       <LoadingSpinner size="sm" />
-                      Verarbeitung...
+                      Processing...
                     </div>
                   ) : (
-                    "Antwort bestätigen"
+                    "Confirm Answer"
                   )}
                 </Button>
 
@@ -1154,7 +1154,7 @@ const DiscountProgressBar = ({ correctAnswers }: { correctAnswers: number }) => 
   return (
     <div className="bg-[#ffffff] p-4 rounded-lg">
       <div className="flex justify-center items-center">
-        <span className="text-sm text-gray-600 mr-10">Rabattfortschritt:</span>
+        <span className="text-sm text-gray-600 mr-10">Discount progress:</span>
         <span className="font-semibold text-gray-600">£{discount} / </span>
         <span className="text-[#26ca20] font-bold ml-5">£{maxDiscount}</span>
       </div>

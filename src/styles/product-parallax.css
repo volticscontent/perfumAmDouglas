@@ -212,6 +212,9 @@ html {
   right: 0;
   z-index: 50;
   padding: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .fixed-add-to-cart-button {
@@ -227,6 +230,7 @@ html {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  border-radius: 8px;
 }
 
 .fixed-add-to-cart-button:hover {
@@ -236,6 +240,39 @@ html {
 
 .fixed-add-to-cart-button:active {
   transform: translateY(0);
+}
+
+/* Regras específicas para mobile */
+@media (max-width: 768px) {
+  .fixed-cart-button {
+    padding: 0.75rem 1rem;
+    z-index: 9999;
+    position: fixed !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  .fixed-add-to-cart-button {
+    max-width: none;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fixed-cart-button {
+    padding: 0.5rem;
+    bottom: 0;
+  }
+  
+  .fixed-add-to-cart-button {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
 }
 
 /* Category tags styling */

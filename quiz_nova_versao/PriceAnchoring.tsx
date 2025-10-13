@@ -94,15 +94,8 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
 
   return (
     <div className="bg-white px-2 pt-4 pb-4">
-        {/* Headline */}
-        <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            Unlock Your Exclusive Perfume Deal
-          </h2>
-          <p className="text-gray-600 text-sm md:text-base">
-            Answer six quick questions and save up to £120 — available online only, for a limited time.
-          </p>
-        </div>
+      <h1 className="text-center text-[#2c2c2c] text-2xl font-bold font-sans mb-4">Unlock Your Exclusive Perfume Deal</h1>
+      <div className="flex justify-center mb-4"><span className="text-sm text-wrap text-center text-gray-500">Answer six quick questions and save up to £120 — available only online, for a limited time.</span></div>
 
 
 
