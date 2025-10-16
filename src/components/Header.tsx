@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/contexts/CartContext';
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
@@ -12,6 +13,7 @@ interface HeaderProps {
 export default function Header({ onSearch, searchValue: externalSearchValue, onSearchChange }: HeaderProps) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [internalSearchValue, setInternalSearchValue] = useState('');
+  const { state, toggleCart } = useCart();
   
   const searchValue = externalSearchValue !== undefined ? externalSearchValue : internalSearchValue;
   
@@ -111,13 +113,21 @@ export default function Header({ onSearch, searchValue: externalSearchValue, onS
               </button>
 
               {/* Ícone do Carrinho */}
-              <Link href="/cart" className="flex items-center p-1 lg:p-2 text-gray-600 hover:text-black">
+              <button 
+                onClick={toggleCart}
+                className="flex items-center p-1 lg:p-2 text-gray-600 hover:text-black relative"
+              >
                 <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M10 8.5C10 8.77614 10.2239 9 10.5 9H13.5C13.7761 9 14 8.77614 14 8.5C14 8.22386 13.7761 8 13.5 8H10.5C10.2239 8 10 8.22386 10 8.5Z" fill="currentColor"/>
                   <path d="M17 8.5C17 8.77614 17.2239 9 17.5 9H18V21H6V9H6.5C6.77614 9 7 8.77614 7 8.5C7 8.22386 6.77614 8 6.5 8H6C5.44772 8 5 8.44772 5 9V21C5 21.5523 5.44772 22 6 22H18C18.5523 22 19 21.5523 19 21V9C19 8.44771 18.5523 8 18 8H17.5C17.2239 8 17 8.22386 17 8.5Z" fill="currentColor"/>
                   <path d="M8 6C8 3.79086 9.79086 2 12 2C14.2091 2 16 3.79086 16 6V12.5C16 12.7761 15.7761 13 15.5 13C15.2239 13 15 12.7761 15 12.5V6C15 4.34315 13.6569 3 12 3C10.3431 3 9 4.34315 9 6V12.5C9 12.7761 8.77614 13 8.5 13C8.22386 13 8 12.7761 8 12.5V6Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
                 </svg>
-              </Link>
+                {state.items.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {state.items.reduce((total, item) => total + item.quantity, 0)}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
         </div>

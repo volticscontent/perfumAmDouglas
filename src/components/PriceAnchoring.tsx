@@ -19,19 +19,19 @@ interface Kit {
 const kits: Kit[] = [
   {
     id: "luxury-perfumes",
-    name: "3 Luxury Perfumes – Exclusive Online Kit",
+    name: "3 Luxus-Parfüms – Exklusives Online-Set",
     wrestler: "Premium",
     price: 49.99,
     originalPrice: 169.99,
     savings: 120,
-    description: "3 Premium Fragrance Collection",
+    description: "3 Premium Duft-Kollektion",
     items: [
-      "Elegant Rose & Bergamot (50ml)",
-      "Mysterious Oud & Vanilla (50ml)", 
-      "Fresh Citrus & Cedar (50ml)",
-      "Premium Gift Box",
-      "Exclusive Online Access",
-      "Limited Time Offer"
+      "Elegante Rose & Bergamotte (50ml)",
+      "Mysteriöses Oud & Vanille (50ml)", 
+      "Frische Zitrus & Zeder (50ml)",
+      "Premium Geschenkbox",
+      "Exklusiver Online-Zugang",
+      "Zeitlich begrenztes Angebot"
     ],
     images: [
       "/perfume-kit.jpg",
@@ -97,10 +97,10 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
         {/* Headline */}
         <div className="text-center mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            Unlock Your Exclusive Perfume Deal
+            Sichern Sie sich Ihr exklusives Parfüm-Angebot
           </h2>
           <p className="text-gray-600 text-sm md:text-base">
-            Answer six quick questions and save up to £120 — available online only, for a limited time.
+            Beantworten Sie sechs kurze Fragen und sparen Sie bis zu 120 € — nur online verfügbar, für begrenzte Zeit.
           </p>
         </div>
 
@@ -119,21 +119,21 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
           />
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-600">Original Price</p>
-          <p className="text-lg line-through text-gray-500">£169.99</p>
+          <p className="text-sm text-gray-600">Originalpreis</p>
+          <p className="text-lg line-through text-gray-500">€169.99</p>
         </div>
       </div>
 
       <div className="flex justify-between items-center py-2">
-        <span className="text-sm text-gray-900 uppercase tracking-wide font-medium">FINAL PRICE</span>
+        <span className="text-sm text-gray-900 uppercase tracking-wide font-medium">ENDPREIS</span>
         <div className="text-right">
-          <span className="block text-3xl font-semibold text-gray-900">£49.99</span>
-          <span className="text-sm text-[#ca0d0d]">You save £120</span>
+          <span className="block text-3xl font-semibold text-gray-900">€49.99</span>
+          <span className="text-sm text-[#ca0d0d]">Sie sparen €120</span>
         </div>
       </div>
 
               <div className="border-t-2 border-[#13ce67] pt-6">
-          <h3 className="text-center text-[#2c2c2c] text-2xl font-bold font-sans mb-2">Perfumes we still have in stock:</h3>
+          <h3 className="text-center text-[#2c2c2c] text-2xl font-bold font-sans mb-2">Parfüms, die wir noch auf Lager haben:</h3>
         
         <div className="w-full overflow-hidden pb-4 mb-4">
           <div className="relative">
@@ -177,7 +177,7 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
               onClick={() => onBuyClick(selectedKit)}
               className="w-full bg-[#2ed418] hover:bg-[#33ff00] shadow-xl shadow-gray-500/35 hover:shadow-green-200 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
             >
-              Buy Now – Get This Perfume Kit
+              Jetzt kaufen – Holen Sie sich dieses Parfüm-Set
             </button>
           </div>
         )}

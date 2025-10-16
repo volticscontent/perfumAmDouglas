@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Nunito_Sans } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/contexts/CartContext";
+import CartSidebar from "@/components/CartSidebar";
 
 // Configuração das fontes otimizadas
 const inter = Inter({
@@ -36,7 +38,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${nunitoSans.variable} antialiased font-sans`}>
-        {children}
+        <CartProvider>
+          {children}
+          <CartSidebar />
+        </CartProvider>
       </body>
     </html>
   );

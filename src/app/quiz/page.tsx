@@ -153,45 +153,45 @@ interface Question {
 const questions: Question[] = [
   {
     id: 1,
-    question: "When choosing the perfect perfume, what matters most to you?",
-    options: ["The scent / fragrance notes 🌸", "How long it lasts on skin ⏳", "The brand ✨", "The price 💶"],
+    question: "Wenn Sie das perfekte Parfüm auswählen, was ist Ihnen am wichtigsten?",
+    options: ["Der Duft / die Duftnoten 🌸", "Wie lange er auf der Haut hält ⏳", "Die Marke ✨", "Der Preis 💶"],
     correct: 0,
-    explanation: "Fragrance notes are the heart of any great perfume!",
+    explanation: "Duftnoten sind das Herzstück jedes großartigen Parfüms!",
   },
   {
     id: 2,
-    question: "Where do you usually discover new perfumes?",
-    options: ["In stores 🏬", "Social media 📱", "Online ads 💻", "Friends or family 👥"],
+    question: "Wo entdecken Sie normalerweise neue Parfüms?",
+    options: ["In Geschäften 🏬", "In sozialen Medien 📱", "Durch Online-Werbung 💻", "Von Freunden oder Familie 👥"],
     correct: 0,
-    explanation: "Stores offer the best experience to test and discover new fragrances!",
+    explanation: "Geschäfte bieten die beste Erfahrung, um neue Düfte zu testen und zu entdecken!",
   },
   {
     id: 3,
-    question: "How often do you buy a new perfume?",
-    options: ["Once a year", "2-3 times a year", "Every season (4 times a year)", "Monthly or more"],
+    question: "Wie oft kaufen Sie ein neues Parfüm?",
+    options: ["Einmal im Jahr", "Zwei- bis dreimal im Jahr", "Jede Saison (viermal im Jahr)", "Monatlich oder öfter"],
     correct: 0,
-    explanation: "Taking time to choose the perfect perfume makes every purchase special!",
+    explanation: "Sich Zeit zu nehmen, um das perfekte Parfüm zu wählen, macht jeden Kauf besonders!",
   },
   {
     id: 4,
-    question: "What influences your decision most when buying a new perfume?",
-    options: ["Friends or family recommendations", "Online reviews", "Testing in store", "Promotions or discounts"],
+    question: "Was beeinflusst Ihre Entscheidung am meisten beim Kauf eines neuen Parfüms?",
+    options: ["Empfehlungen von Freunden oder Familie", "Online-Bewertungen", "Testen im Geschäft", "Aktionen oder Rabatte"],
     correct: 0,
-    explanation: "Personal recommendations from trusted people are invaluable when choosing fragrances!",
+    explanation: "Persönliche Empfehlungen von vertrauenswürdigen Personen sind unbezahlbar bei der Wahl von Düften!",
   },
   {
     id: 5,
-    question: "What type of promotion interests you most?",
-    options: ["Direct discount on price", "Multi-product sets", "Free samples with purchase", "Cashback or loyalty points"],
+    question: "Welche Art von Aktion interessiert Sie am meisten?",
+    options: ["Direkter Preisnachlass", "Mehrprodukt-Sets", "Kostenlose Proben beim Kauf", "Cashback oder Treuepunkte"],
     correct: 0,
-    explanation: "Direct discounts provide immediate value for your favorite fragrances!",
+    explanation: "Direkte Rabatte bieten sofortigen Wert für Ihre Lieblingsdüfte!",
   },
   {
     id: 6,
-    question: "Do you usually buy perfumes for yourself or as gifts?",
-    options: ["For myself 🎁", "As gifts 🎀", "Both equally ⚖️", "Depends on occasion 🗓️"],
+    question: "Kaufen Sie Parfüms normalerweise eher für sich selbst oder als Geschenk?",
+    options: ["Hauptsächlich für mich selbst 💆‍♀️", "Hauptsächlich als Geschenk 🎁", "Gleichermaßen für beide 🤝", "Je nach Gelegenheit 🎯"],
     correct: 0,
-    explanation: "Treating yourself to a beautiful fragrance is always a wonderful choice!",
+    explanation: "Sich selbst mit einem schönen Duft zu verwöhnen ist immer eine wunderbare Wahl!",
   },
 ]
 
@@ -251,8 +251,8 @@ const SuccessNotification = ({ show, onClose }: { show: boolean; onClose: () => 
           <DollarSign className="h-8 w-8 text-green-500 animate-bounce" />
         </div>
         <div>
-          <p className="font-bold text-lg">Congratulations! 🎉</p>
-          <p className="text-sm opacity-90">You&apos;ve earned a £20 discount!</p>
+          <p className="font-bold text-lg">Herzlichen Glückwunsch! 🎉</p>
+          <p className="text-sm opacity-90">Sie haben einen 20 € Rabatt verdient!</p>
         </div>
         <button 
           onClick={onClose}
@@ -899,14 +899,12 @@ export default function WWESummerSlamQuiz() {
       return;
     }
     
-    // Verificar se uma resposta foi selecionada
-    if (selectedAnswer === '' || selectedAnswer === null) {
-      console.warn('No answer selected, skipping...');
-      return;
-    }
+    // Se não há resposta selecionada, usar a primeira opção como padrão
+    const answerToUse = selectedAnswer || '0';
+    console.log('Using answer:', answerToUse, 'Selected answer was:', selectedAnswer);
     
     setIsSubmitting(true)
-    const isCorrect = Number.parseInt(selectedAnswer) === currentQuestionData.correct
+    const isCorrect = Number.parseInt(answerToUse) === currentQuestionData.correct
     const questionNumber = currentQuestion + 1
 
     // Sempre incrementar o contador, independente da resposta estar correta
@@ -991,7 +989,7 @@ export default function WWESummerSlamQuiz() {
           <div className="flex-grow">
             <div className="container mx-auto px-2 py-10">
               <div className="text-center mb-10 animate-fadeIn">
-                <h1 className="text-4xl font-normal font-thin text-gray-900">Message from The Perfume Shop CEO</h1>
+                <h1 className="text-4xl font-normal font-thin text-gray-900">Nachricht vom CEO von Douglas</h1>
               </div>
               
               <div className="space-y-10">
@@ -1002,7 +1000,7 @@ export default function WWESummerSlamQuiz() {
 
                 <div className="bg-[#9bdcd2] text-center py-5 px-5 text-sm relative rounded-xl">
                   <blockquote className="text-1xl md:text-lg text-[#020202] font-thin text-center leading-relaxed">
-                    &quot;Answer 6 questions about your perfume preferences and get £120 off a set of perfumes.&quot;
+                    &quot;Beantworte 6 Fragen zu deinen Parfümvorlieben und erhalte 120 € Rabatt auf ein Parfüm-Set.&quot;
                   </blockquote>
                 </div>
 
@@ -1015,12 +1013,12 @@ export default function WWESummerSlamQuiz() {
                   {isLoading ? (
                     <>
                       <LoadingSpinner size="md" />
-                      Starting Quiz...
+                      Quiz wird gestartet...
                     </>
                   ) : (
                     <>
                       <Trophy className="h-6 w-6" />
-                      Start Quiz
+                      Quiz starten
                     </>
                   )}
                 </Button>
@@ -1069,13 +1067,13 @@ export default function WWESummerSlamQuiz() {
             <div className="mb-6 animate-fadeIn">
               <div className="flex justify-center mb-4">
                 <div className="text-center">
-                  <p className="text-sm text-gray-600">Your discount</p>
+                  <p className="text-sm text-gray-600">Ihr Rabatt</p>
                   <p className={`text-2xl font-bold text-[#4ada12] transform transition-all duration-500 ${
                     correctAnswers > 0 ? 'scale-125 animate-pulse' : ''
                   }`}>
-                    £{correctAnswers * 20}
+                    €{correctAnswers * 20}
                   </p>
-                  <p className="text-xs text-gray-500">Participation reward</p>
+                  <p className="text-xs text-gray-500">Teilnahmebelohnung</p>
                 </div>
               </div>
               {gameStarted && !quizCompleted && (
@@ -1155,8 +1153,8 @@ const DiscountProgressBar = ({ correctAnswers }: { correctAnswers: number }) => 
     <div className="bg-[#ffffff] p-4 rounded-lg">
       <div className="flex justify-center items-center">
         <span className="text-sm text-gray-600 mr-10">Rabattfortschritt:</span>
-        <span className="font-semibold text-gray-600">£{discount} / </span>
-        <span className="text-[#26ca20] font-bold ml-5">£{maxDiscount}</span>
+        <span className="font-semibold text-gray-600">€{discount} / </span>
+        <span className="text-[#26ca20] font-bold ml-5">€{maxDiscount}</span>
       </div>
       <div 
         aria-valuemax={100} 

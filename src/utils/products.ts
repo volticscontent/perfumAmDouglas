@@ -47,6 +47,17 @@ export interface Product {
     discount_percentage: number;
     valid_until: string;
   };
+  metafields?: {
+    'internal.id'?: string;
+    'internal.brands'?: string;
+    'internal.primary_brand'?: string;
+    'internal.category'?: string;
+    'internal.country'?: string;
+    'internal.language'?: string;
+    'seo.meta_title'?: string;
+    'seo.meta_description'?: string;
+    'seo.keywords'?: string;
+  };
 }
 
 export interface ProductsData {

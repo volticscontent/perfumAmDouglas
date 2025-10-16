@@ -8,17 +8,85 @@ import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { getProductByHandle, getRelatedProducts, formatPrice, Product } from '../../../utils/products';
 import { useParallax } from '@/hooks/useParallax';
+import { useCart } from '@/contexts/CartContext';
+import { findVariantByHandle } from '@/utils/shopifyVariants';
 import '@/styles/product-parallax.css';
+
+// Dados fake de comentários
+const fakeReviews = [
+  {
+    id: 1,
+    name: "Anna Müller",
+    rating: 5,
+    date: "2024-01-15",
+    comment: "Fantastischer Duft! Die Haltbarkeit ist ausgezeichnet und sehr elegant. Sehr empfehlenswert!"
+  },
+  {
+    id: 2,
+    name: "Thomas Weber",
+    rating: 4,
+    date: "2024-01-10",
+    comment: "Sehr gutes Produkt, schnelle Lieferung und gut verpackt. Der Duft ist genau wie erwartet."
+  },
+  {
+    id: 3,
+    name: "Sarah Schmidt",
+    rating: 5,
+    date: "2024-01-08",
+    comment: "Ich liebe es! Es ist jetzt mein Lieblingsparfüm. Die Qualität ist hervorragend."
+  },
+  {
+    id: 4,
+    name: "Michael Fischer",
+    rating: 4,
+    date: "2024-01-05",
+    comment: "Ausgezeichnetes Preis-Leistungs-Verhältnis. Das Parfüm hat gute Haltbarkeit und der Service war perfekt."
+  },
+  {
+    id: 5,
+    name: "Julia Becker",
+    rating: 5,
+    date: "2024-01-02",
+    comment: "Hat meine Erwartungen übertroffen! Sehr eleganter und langanhaltender Duft. Werde wieder kaufen."
+  }
+];
+
+// Calcular rating médio
+const averageRating = fakeReviews.reduce((sum, review) => sum + review.rating, 0) / fakeReviews.length;
+const totalReviews = fakeReviews.length;
 
 export default function ProductPage() {
   const params = useParams();
   const handle = Array.isArray(params.handle) ? params.handle[0] : params.handle;
+  const { addItem, state } = useCart();
   
   const [selectedImage, setSelectedImage] = useState<string>('')
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+  const [isReviewsOpen, setIsReviewsOpen] = useState(false)
   const { scrollY, isScrolling, hasReachedPhotoLimit, photoLimit } = useParallax()
+
+  // Função para adicionar produto ao carrinho
+  const handleAddToCart = () => {
+    if (!product || !handle) return;
+    
+    const shopifyVariant = findVariantByHandle(handle);
+    if (!shopifyVariant) {
+      console.error('Produto não encontrado no Shopify:', handle);
+      return;
+    }
+    
+    addItem({
+      handle: shopifyVariant.handle,
+      variant_id: shopifyVariant.variant_id,
+      product_id: shopifyVariant.product_id,
+      title: shopifyVariant.title,
+      price: shopifyVariant.price,
+      image: product.images[0] || ''
+    });
+  };
 
   // Função para calcular o prazo de entrega dinâmico
   const getDeliveryTimeframe = () => {
@@ -168,7 +236,7 @@ export default function ProductPage() {
                     
                     <div className="flex-1">
                       <h1 className="text-lg px-4 font-thin mb-1">
-                        {product.title}
+                        {product?.metafields?.['seo.meta_title'] || product.title}
                       </h1>
 
                      <div className="flex px-4 items-center justify-between">
@@ -231,14 +299,13 @@ export default function ProductPage() {
                   </div>
                 </div>
               </div>
-              <div className="border-t border-gray-200 mt-4"></div>
             </div>
 
             {/* Informações de Entrega */}
             <div className="product-delivery-info mb-6" data-testid="product-delivery-info">
               <div className="availability-container">
                 <div className="availability-info-container mb-4" data-testid="online-availability">
-                  <button className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50" data-testid="availability-info">
+                  <button className="w-full flex items-center justify-between p-4 rounded-lg hover:bg-gray-50" data-testid="availability-info">
                     <div className="flex items-center gap-3">
                       <div className="status-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-green-600">
@@ -256,11 +323,6 @@ export default function ProductPage() {
                         <div className="text-sm text-gray-600 text-left">Lieferzeitraum: {getDeliveryTimeframe()}</div>
                       </div>
                     </div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-400">
-                      <path d="M4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
-                      <path d="M12 10C12.2761 10 12.5 10.2239 12.5 10.5V15.5C12.5 15.7761 12.2761 16 12 16C11.7239 16 11.5 15.7761 11.5 15.5V10.5C11.5 10.2239 11.7239 10 12 10Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
-                      <path d="M12.25 7.75C12.25 7.88807 12.1381 8 12 8C11.8619 8 11.75 7.88807 11.75 7.75C11.75 7.61193 11.8619 7.5 12 7.5C12.1381 7.5 12.25 7.61193 12.25 7.75Z" fill="currentColor" stroke="currentColor"/>
-                    </svg>
                   </button>
                 
                 </div>
@@ -284,9 +346,6 @@ export default function ProductPage() {
                         <div className="text-sm text-gray-600 text-left">Filialverfügbarkeit prüfen</div>
                       </div>
                     </div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-400">
-                      <path d="M15.8334 12.3726C16.0555 12.1739 16.0555 11.8261 15.8334 11.6274L7.16631 3.87263C6.96052 3.6885 6.94296 3.3724 7.12709 3.16661C7.31122 2.96081 7.62732 2.94325 7.83311 3.12738L16.5002 10.8821C17.1666 11.4784 17.1666 12.5216 16.5002 13.1179L7.83311 20.8726C7.62732 21.0568 7.31122 21.0392 7.12709 20.8334C6.94296 20.6276 6.96052 20.3115 7.16631 20.1274L15.8334 12.3726Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
-                    </svg>
                   </button>
                 </div>
               </div>
@@ -304,7 +363,6 @@ export default function ProductPage() {
                   <li className="text-gray-700 text-sm">extravagant, exzessiv und luxuriös</li>
                   <li className="text-gray-700 text-sm">für Gentlemen, die Augenhöhe verführerisch finden</li>
                   <li className="text-gray-700 text-sm">ein Duft wie ein Goldbarren: imposant und zeitlos</li>
-                  <li className="text-gray-700 text-sm">der 1-Million-Mann und Lady Million – a match made by Paco Rabanne</li>
                 </ul>
                 <section aria-label="Mehr zum Produkt">
                   <ul className="product-labels flex gap-4 flex-wrap">
@@ -347,36 +405,149 @@ export default function ProductPage() {
             <div className="border-t border-gray-200 pt-6 mb-6">
               <div data-testid="accordion-panels">
                 <div data-testid="accordion-panels__panel">
-                  <button type="button" className="w-full px-4 flex items-center justify-between py-4 text-left" data-testid="details">
+                  <button 
+                    type="button" 
+                    className="w-full px-4 flex items-center justify-between py-4 text-left" 
+                    data-testid="details"
+                    onClick={() => setIsDetailsOpen(!isDetailsOpen)}
+                  >
                     <span className="text-lg font-medium">Produktdetails</span>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-400">
+                    <svg 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className={`text-gray-400 transition-transform duration-200 ${isDetailsOpen ? 'rotate-90' : ''}`}
+                    >
                       <path d="M15.6001 11.2001C16.1333 11.6001 16.1333 12.4 15.6001 12.8L8.80143 17.9C8.58054 18.0657 8.26713 18.021 8.10142 17.8001C7.93572 17.5792 7.98046 17.2658 8.20135 17.1001L15 12L8.20135 6.9C7.98046 6.73429 7.93572 6.42089 8.10142 6.19999C8.26713 5.97909 8.58054 5.93435 8.80143 6.10006L15.6001 11.2001Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
                     </svg>
                   </button>
+                  
+                  {/* Conteúdo do Accordion */}
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isDetailsOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="px-4 pb-4">
+                      <div className="space-y-4 text-sm text-gray-600">
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Produktinformationen</h4>
+                          <p><strong>Marke:</strong> {product?.metafields?.['internal.brands'] || product?.primary_brand || product?.brands?.[0] || 'N/A'}</p>
+                          <p><strong>Typ:</strong> {product?.metafields?.['internal.category'] || product?.category?.type || 'Parfum'}</p>
+                          <p><strong>Geschlecht:</strong> {product?.tags?.includes('Herren') ? 'Herren' : product?.tags?.includes('Damen') ? 'Damen' : 'Unisex'}</p>
+                          {product?.variants?.[0]?.weight && (
+                            <p><strong>Größe:</strong> {product.variants[0].weight}</p>
+                          )}
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Beschreibung</h4>
+                          <p>{product?.metafields?.['seo.meta_description'] || product?.description || product?.body_html?.replace(/<[^>]*>/g, '') || 'Ein exquisiter Duft, der Eleganz und Raffinesse verkörpert.'}</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Lieferung & Versand</h4>
+                          <p>Lieferzeit: 3-10 Werktage</p>
+                          <p>30 Tage Rückgaberecht</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Seção de Avaliações */}
             <div className="border-t border-gray-200 pt-6 mb-6">
-              <button type="button" className="w-full px-4 flex items-center justify-between py-4 text-left" data-testid="product-feedback">
+              <button 
+                type="button" 
+                className="w-full px-4 flex items-center justify-between py-4 text-left" 
+                data-testid="product-feedback"
+                onClick={() => setIsReviewsOpen(!isReviewsOpen)}
+              >
                 <div className="flex items-center gap-3">
                   <span className="text-lg font-medium">Bewertungen</span>
                   <div className="flex items-center gap-1">
-                    <span className="flex gap-0.5" data-testid="rating-stars" data-average-rating="0">
+                    <span className="flex gap-0.5" data-testid="rating-stars" data-average-rating={averageRating.toFixed(1)}>
                       {[...Array(5)].map((_, i) => (
-                        <svg key={i} width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-300">
+                        <svg key={i} width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={i < Math.floor(averageRating) ? "text-yellow-400" : "text-gray-300"}>
                           <path d="M6.89541 5.13455L6 3.22465L5.10459 5.13455L2.97747 5.45993L4.52055 7.04331L4.16935 9.19887L6 8.18573L7.83065 9.19887L7.47945 7.04331L9.02253 5.45993L6.89541 5.13455ZM10.8683 4.69576C10.993 4.71484 11.0439 4.86712 10.9558 4.95752L8.58321 7.39205L9.14164 10.8195C9.16247 10.9473 9.02692 11.0429 8.91369 10.9803L6 9.36775L3.08631 10.9803C2.97308 11.0429 2.83753 10.9473 2.85836 10.8195L3.41679 7.39205L1.04422 4.95752C0.956122 4.86712 1.00704 4.71484 1.13175 4.69576L4.40349 4.1953L5.85969 1.08924C5.91548 0.970253 6.08452 0.970253 6.14031 1.08924L7.59651 4.1953L10.8683 4.69576Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
                         </svg>
                       ))}
                     </span>
-                    <span className="text-gray-500 text-sm">0&nbsp;(0)</span>
+                    <span className="text-gray-500 text-sm">{averageRating.toFixed(1)}&nbsp;({totalReviews})</span>
                   </div>
                 </div>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-400">
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className={`text-gray-400 transition-transform duration-200 ${isReviewsOpen ? 'rotate-90' : ''}`}
+                >
                   <path d="M15.6001 11.2001C16.1333 11.6001 16.1333 12.4 15.6001 12.8L8.80143 17.9C8.58054 18.0657 8.26713 18.021 8.10142 17.8001C7.93572 17.5792 7.98046 17.2658 8.20135 17.1001L15 12L8.20135 6.9C7.98046 6.73429 7.93572 6.42089 8.10142 6.19999C8.26713 5.97909 8.58054 5.93435 8.80143 6.10006L15.6001 11.2001Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
                 </svg>
               </button>
+
+              {/* Conteúdo expansível das avaliações */}
+              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isReviewsOpen ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="px-4 pb-4 space-y-4">
+                  {/* Lista de comentários fake */}
+                  <div className="space-y-4 mb-6">
+                    {fakeReviews.map((review) => (
+                      <div key={review.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                              <span className="text-sm font-medium text-gray-600">
+                                {review.name.split(' ').map(n => n[0]).join('')}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="font-medium text-gray-900">{review.name}</span>
+                              <div className="flex items-center gap-1 mt-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <svg key={i} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={i < review.rating ? "text-yellow-400" : "text-gray-300"}>
+                                    <path d="M6.89541 5.13455L6 3.22465L5.10459 5.13455L2.97747 5.45993L4.52055 7.04331L4.16935 9.19887L6 8.18573L7.83065 9.19887L7.47945 7.04331L9.02253 5.45993L6.89541 5.13455ZM10.8683 4.69576C10.993 4.71484 11.0439 4.86712 10.9558 4.95752L8.58321 7.39205L9.14164 10.8195C9.16247 10.9473 9.02692 11.0429 8.91369 10.9803L6 9.36775L3.08631 10.9803C2.97308 11.0429 2.83753 10.9473 2.85836 10.8195L3.41679 7.39205L1.04422 4.95752C0.956122 4.86712 1.00704 4.71484 1.13175 4.69576L4.40349 4.1953L5.85969 1.08924C5.91548 0.970253 6.08452 0.970253 6.14031 1.08924L7.59651 4.1953L10.8683 4.69576Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
+                                  </svg>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-sm text-gray-500">
+                             {new Date(review.date).toLocaleDateString('de-DE')}
+                           </span>
+                        </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          {review.comment}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900">Schreiben Sie Ihre Bewertung</span>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Teilen Sie Ihre Erfahrungen mit diesem Produkt und helfen Sie anderen Kunden.
+                    </p>
+                    <button className="bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors">
+                      Bewertung schreiben
+                    </button>
+                  </div>
+                  
+                  <div className="border-t pt-4">
+                    <h4 className="font-medium text-gray-900 mb-2">Bewertungsrichtlinien</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Bewertungen müssen ehrlich und hilfreich sein</li>
+                      <li>• Nur verifizierte Käufer können bewerten</li>
+                      <li>• Bewertungen werden vor Veröffentlichung geprüft</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Seção de Vantagens */}
@@ -390,7 +561,7 @@ export default function ProductPage() {
                     <path d="M3.5 6H15.5C15.7761 6 16 6.22386 16 6.5V14.05C16.1616 14.0172 16.3288 14 16.5 14C16.6716 14 16.8392 14.0173 17.0011 14.0502V10H19.5785C19.8201 10 20.0272 10.1723 20.0709 10.4097L20.9902 15.4097C21.0467 15.7169 20.8105 16 20.4979 16H18.95C18.9828 16.1616 19 16.3288 19 16.5C19 16.6712 18.9828 16.8384 18.95 17H20.4979C21.4359 17 22.1443 16.1506 21.9749 15.2291L21.0555 10.229C20.9246 9.51703 20.3033 9 19.5785 9H17V6.5C17 5.67157 16.3284 5 15.5 5H3.5C2.67157 5 2 5.67157 2 6.5V15.5C2 16.3284 2.67157 17 3.5 17H4.05001C4.01722 16.8384 4 16.6712 4 16.5C4 16.3288 4.01722 16.1616 4.05001 16H3.5C3.22386 16 3 15.7761 3 15.5V6.5C3 6.22386 3.22386 6 3.5 6Z" fill="currentColor"/>
                     <path d="M8.94999 16C8.98278 16.1616 9 16.3288 9 16.5C9 16.6712 8.98278 16.8384 8.94999 17H14.05C14.0172 16.8384 14 16.6712 14 16.5C14 16.3288 14.0172 16.1616 14.05 16H8.94999Z" fill="currentColor"/>
                   </svg>
-                  <span className="text-sm">Schnelle Lieferung 1–3 Werktage Lieferzeit</span>
+                  <span className="text-sm">Für diese Aktion ist kein Expressversand verfügbar. (Extreme Nachfrage)</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-green-600 flex-shrink-0">
@@ -466,13 +637,18 @@ export default function ProductPage() {
       </section>
 
       {/* Botão Add to Cart fixo na parte inferior */}
-      <div className="fixed-cart-button">
-        <button className="fixed-add-to-cart-button">
-          <span className="flex items-center justify-center gap-2 uppercase font-thin">
-            In den Warenkorb - {formatPrice(product.price, product.currency)}
-          </span>
-        </button>
-      </div>
+      {!state.isOpen && (
+        <div className="fixed-cart-button">
+          <button 
+            className="fixed-add-to-cart-button"
+            onClick={handleAddToCart}
+          >
+            <span className="flex items-center justify-center gap-2 uppercase font-thin">
+              In den Warenkorb - {formatPrice(product.price, product.currency)}
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
