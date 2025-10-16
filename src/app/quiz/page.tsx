@@ -9,7 +9,7 @@ import Image from "next/image"
 import PriceAnchoring from "../../components/PriceAnchoring"
 import QuizHeader from "../../components/QuizHeader"
 import Footer from "../../components/Footer"
-import { trackQuizStep, useTikTokClickIdCapture } from "../../utils/tracking"
+import { trackQuizStep, trackQuizCompletion, useTikTokClickIdCapture } from "../../utils/tracking"
 import styles from "../../styles/animations.module.css"
 
 // Add animated border keyframes for progress
@@ -773,6 +773,7 @@ export default function WWESummerSlamQuiz() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showUSPPanel, setShowUSPPanel] = useState(false);
+  const [startTime, setStartTime] = useState<number>(0);
 
   // Add styles to document head
   useEffect(() => {
@@ -863,6 +864,7 @@ export default function WWESummerSlamQuiz() {
     // Simular um pequeno delay para melhor UX
     setTimeout(() => {
       setGameStarted(true)
+      setStartTime(Date.now()) // Definir tempo de início
       setIsLoading(false)
       // Scroll automático para o topo ao iniciar quiz
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -930,7 +932,11 @@ export default function WWESummerSlamQuiz() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setQuizCompleted(true)
-        trackQuizStep('quiz_completed'); // Rastrear conclusão do quiz
+        trackQuizCompletion({ 
+          totalQuestions: questions.length, 
+          correctAnswers: correctAnswers + 1,
+          completionTime: Date.now() - startTime
+        }); // Rastrear conclusão do quiz
         // Scroll automático para o topo ao completar quiz
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -948,7 +954,11 @@ export default function WWESummerSlamQuiz() {
         setSelectedAnswer("")
       } else {
         setQuizCompleted(true)
-        trackQuizStep('quiz_completed'); // Rastrear conclusão do quiz
+        trackQuizCompletion({ 
+          totalQuestions: questions.length, 
+          correctAnswers: correctAnswers,
+          completionTime: Date.now() - startTime
+        }); // Rastrear conclusão do quiz
       }
       setIsLoading(false)
     }, 400)

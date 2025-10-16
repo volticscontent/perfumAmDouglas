@@ -184,6 +184,41 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
+    
+    // Track add to cart event for Meta Pixel
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'AddToCart', {
+        content_ids: [item.variant_id.toString()],
+        content_type: 'product',
+        value: parseFloat(item.price),
+        currency: 'EUR'
+      });
+    }
+    
+    // Track add to cart event for Utmify
+    if (typeof window !== 'undefined' && window.pixelId) {
+      try {
+        fetch(`https://api.utmify.com.br/tracking/v1/events`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pixel_id: window.pixelId,
+            event: 'add_to_cart',
+            event_data: {
+              content_ids: [item.variant_id.toString()],
+              content_type: 'product',
+              value: parseFloat(item.price),
+              currency: 'EUR',
+              product_title: item.title
+            }
+          })
+        }).catch(error => console.log('Utmify tracking error:', error));
+      } catch (error) {
+        console.log('Utmify tracking error:', error);
+      }
+    }
   };
 
   const removeItem = (handle: string) => {
@@ -212,6 +247,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getShopifyCheckoutUrl = () => {
     if (state.items.length === 0) return '';
+    
+    // Track initiate checkout event for Meta Pixel
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
+        content_ids: state.items.map(item => item.variant_id.toString()),
+        content_type: 'product',
+        value: state.totalPrice,
+        currency: 'EUR',
+        num_items: state.totalItems
+      });
+    }
+    
+    // Track initiate checkout event for Utmify
+    if (typeof window !== 'undefined' && window.pixelId) {
+      try {
+        fetch(`https://api.utmify.com.br/tracking/v1/events`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pixel_id: window.pixelId,
+            event: 'initiate_checkout',
+            event_data: {
+              content_ids: state.items.map(item => item.variant_id.toString()),
+              content_type: 'product',
+              value: state.totalPrice,
+              currency: 'EUR',
+              num_items: state.totalItems
+            }
+          })
+        }).catch(error => console.log('Utmify tracking error:', error));
+      } catch (error) {
+        console.log('Utmify tracking error:', error);
+      }
+    }
     
     const baseUrl = 'https://cc1ve6-49.myshopify.com/cart/';
     const cartItems = state.items.map(item => `${item.variant_id}:${item.quantity}`).join(',');
