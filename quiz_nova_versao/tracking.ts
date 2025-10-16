@@ -1,6 +1,10 @@
 // Tracking utilities for the quiz
 
-export const trackQuizStep = (step: string, data?: any) => {
+interface QuizStepData {
+  [key: string]: string | number | boolean | undefined;
+}
+
+export const trackQuizStep = (step: string, data?: QuizStepData) => {
   // Simple console logging for now - can be replaced with actual analytics
   console.log(`Quiz Step: ${step}`, data);
 };

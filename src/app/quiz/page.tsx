@@ -5,7 +5,6 @@ import { Button } from "../../components/button"
 import { RadioGroup, RadioGroupItem } from "../../components/radio-group"
 import { Label } from "../../components/label"
 import { Trophy, DollarSign } from "lucide-react"
-import Image from "next/image"
 import PriceAnchoring from "../../components/PriceAnchoring"
 import QuizHeader from "../../components/QuizHeader"
 import Footer from "../../components/Footer"
@@ -134,10 +133,7 @@ declare global {
     _fbq?: {
       push: (args: unknown[]) => void;
     };
-    fbq?: {
-      (action: string, event: string, data?: Record<string, unknown>): void;
-      push: (args: unknown[]) => void;
-    };
+    fbq?: (action: string, event: string, data?: Record<string, unknown>) => void;
     pixelId?: string;
   }
 }
@@ -758,7 +754,7 @@ const TrustpilotStars = () => (
 );
 
 // Usar o QuizHeader simplificado
-const CompleteHeader = ({ onUSPClick }: { onUSPClick: () => void }) => {
+const CompleteHeader = () => {
   return <QuizHeader />;
 };
 
@@ -792,7 +788,7 @@ export default function WWESummerSlamQuiz() {
   console.log('[WWESummerSlamQuiz] useTikTokClickIdCapture called')
 
   const isPixelsReady = usePixelLoader()
-  const { playSound, isInitialized: audioInitialized } = useAudioSystem();
+  const { playSound } = useAudioSystem();
   const [progressValue, setProgressValue] = useState(100);
   const progressTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -832,7 +828,7 @@ export default function WWESummerSlamQuiz() {
     
     // Rastrear visualização da pergunta quando gameStarted está true
     if (gameStarted && !quizCompleted) {
-      trackQuizStep('question_viewed', currentQuestion + 1);
+      trackQuizStep('question_viewed', { questionNumber: currentQuestion + 1 });
     }
   }, [currentQuestion, gameStarted, quizCompleted]);
 
@@ -843,12 +839,6 @@ export default function WWESummerSlamQuiz() {
 
   // Usar o hook de delay
   const delayedElements = useDelayedElements()
-
-  // Função para abrir o painel USP
-  const handleUSPClick = () => {
-    console.log('handleUSPClick called')
-    setShowUSPPanel(true)
-  }
 
   // Função para fechar o painel USP
   const handleUSPClose = () => {
@@ -994,7 +984,7 @@ export default function WWESummerSlamQuiz() {
     return (
       <>
         <div className="min-h-screen bg-white flex flex-col">
-          <CompleteHeader onUSPClick={handleUSPClick} />
+          <CompleteHeader />
           <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
           <div className="flex-grow">
             <div className="container mx-auto px-2 py-10">
@@ -1044,7 +1034,7 @@ export default function WWESummerSlamQuiz() {
     return (
       <>
         <div className="min-h-screen bg-white flex flex-col">
-          <CompleteHeader onUSPClick={handleUSPClick} />
+          <CompleteHeader />
           <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
           <div className="flex-grow container mx-auto px-4 py-4">
             <div className="space-y-4">
@@ -1068,7 +1058,7 @@ export default function WWESummerSlamQuiz() {
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
-        <CompleteHeader onUSPClick={handleUSPClick} />
+        <CompleteHeader />
         <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
         <div className="flex-grow container mx-auto px-1 py-5">
           <SuccessNotification show={showNotification} onClose={() => setShowNotification(false)} />

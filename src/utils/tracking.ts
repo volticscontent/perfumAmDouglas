@@ -1,5 +1,16 @@
 // Tracking utilities for the quiz
 
+interface QuizStepData {
+  [key: string]: string | number | boolean | undefined;
+}
+
+interface QuizResult {
+  category?: string;
+  preferences?: string[];
+  score?: number;
+  [key: string]: string | number | boolean | string[] | undefined;
+}
+
 declare global {
   interface Window {
     fbq?: (action: string, event: string, data?: Record<string, unknown>) => void;
@@ -7,7 +18,7 @@ declare global {
   }
 }
 
-export const trackQuizStep = (step: string, data?: any) => {
+export const trackQuizStep = (step: string, data?: QuizStepData) => {
   // Console logging for debugging
   console.log(`Quiz Step: ${step}`, data);
   
@@ -42,7 +53,7 @@ export const trackQuizStep = (step: string, data?: any) => {
   }
 };
 
-export const trackQuizCompletion = (result: any) => {
+export const trackQuizCompletion = (result: QuizResult) => {
   // Track quiz completion with Meta Pixel
   if (typeof window !== 'undefined' && window.fbq) {
     window.fbq('trackCustom', 'QuizCompleted', {

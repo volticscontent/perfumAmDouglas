@@ -440,7 +440,7 @@ export default function ProductPage() {
                         
                         <div>
                           <h4 className="font-medium text-gray-900 mb-2">Beschreibung</h4>
-                          <p>{product?.metafields?.['seo.meta_description'] || product?.description || product?.body_html?.replace(/<[^>]*>/g, '') || 'Ein exquisiter Duft, der Eleganz und Raffinesse verkörpert.'}</p>
+                          <p>{product?.metafields?.['seo.meta_description'] || product?.description || 'Ein exquisiter Duft, der Eleganz und Raffinesse verkörpert.'}</p>
                         </div>
                         
                         <div>

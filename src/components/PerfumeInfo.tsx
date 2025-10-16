@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 const PerfumeInfo = () => {
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
@@ -359,8 +360,8 @@ const PerfumeInfo = () => {
                                fontWeight: '500',
                                transition: 'background 0.2s ease'
                              }}
-                             onMouseOver={(e) => e.target.style.background = '#218838'}
-                             onMouseOut={(e) => e.target.style.background = '#28a745'}
+                             onMouseOver={(e) => (e.target as HTMLButtonElement).style.background = '#218838'}
+                             onMouseOut={(e) => (e.target as HTMLButtonElement).style.background = '#28a745'}
                            >
                              Neue Bewertung abgeben
                            </button>
@@ -371,7 +372,7 @@ const PerfumeInfo = () => {
                     </div>
                     <div className="zl-footer">
                       <a target="_blank" href="https://www.zenloop.com/de/survey_brand?utm_source=website-embed&utm_medium=survey-branding&utm_campaign=1063" rel="noopener noreferrer">
-                        Powered by <img src="https://assets.zenloop.com/logo/zenloop-footer.svg" alt="zenloop" />
+                        Powered by <Image src="https://assets.zenloop.com/logo/zenloop-footer.svg" alt="zenloop" width={60} height={20} />
                       </a>
                     </div>
                   </div>

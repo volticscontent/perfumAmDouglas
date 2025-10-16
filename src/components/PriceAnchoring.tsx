@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { CheckCircle } from "lucide-react"
 import Image from "next/image"
 
 interface Kit {
@@ -42,19 +41,10 @@ const kits: Kit[] = [
   }
 ]
 
-interface PriceAnchoringProps {
-  correctAnswers: number
-  onBuyClick?: (selectedKit: string) => void
-}
-
-export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnchoringProps) {
-  const [selectedKit, setSelectedKit] = useState<string>("luxury-perfumes")
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: (selectedKit: string) => void }) {
   const [carouselOffset, setCarouselOffset] = useState(0)
   
-  const selectedKitData = kits.find(kit => kit.id === selectedKit) || kits[0]
-  const discount = correctAnswers * 20
-  const finalPrice = selectedKitData.price // Use the kit's specific price
+  const selectedKitData = kits[0]
 
   // Auto-rotate images
   useEffect(() => {
@@ -70,7 +60,7 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
   // Reset image index when kit changes
   useEffect(() => {
     setCurrentImageIndex(0)
-  }, [selectedKit])
+  }, [])
 
   // Auto-scroll carousel
   useEffect(() => {

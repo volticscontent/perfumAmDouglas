@@ -166,20 +166,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Carregar carrinho do localStorage na inicialização
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        const cartItems = JSON.parse(savedCart);
-        dispatch({ type: 'LOAD_CART', payload: cartItems });
-      } catch (error) {
-        console.error('Erro ao carregar carrinho do localStorage:', error);
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        try {
+          const cartItems = JSON.parse(savedCart);
+          dispatch({ type: 'LOAD_CART', payload: cartItems });
+        } catch (error) {
+          console.error('Erro ao carregar carrinho do localStorage:', error);
+        }
       }
     }
   }, []);
 
   // Salvar carrinho no localStorage sempre que mudar
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(state.items));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cart', JSON.stringify(state.items));
+    }
   }, [state.items]);
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
@@ -311,6 +315,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useCart = () => {
   const context = useContext(CartContext);
+  if (typeof window === 'undefined') {
+    // Durante o SSR/prerendering, retorna um contexto vazio
+    return {
+      state: { items: [], isOpen: false, totalItems: 0, totalPrice: 0 },
+      addItem: () => {},
+      removeItem: () => {},
+      updateQuantity: () => {},
+      clearCart: () => {},
+      toggleCart: () => {},
+      openCart: () => {},
+      closeCart: () => {},
+      getShopifyCheckoutUrl: () => ''
+    };
+  }
   if (context === undefined) {
     throw new Error('useCart deve ser usado dentro de um CartProvider');
   }

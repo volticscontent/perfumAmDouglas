@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { getProductData, isOnPromotion } from '../utils/products';
+import { useState, useEffect, useMemo } from 'react';
+import { getProductData } from '../utils/products';
 
 interface CategoryCarouselProps {
   className?: string;
@@ -32,16 +32,9 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
   onFiltersChange 
 }) => {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [filters, setFilters] = useState<FilterState>({
-    categories: [],
-    brands: [],
-    gender: [],
-    priceRange: null,
-    promotion: false
-  });
 
   // Categorias em alemão
-  const filterOptions: FilterOption[] = [
+  const filterOptions: FilterOption[] = useMemo(() => [
     {
       id: 'herren',
       label: 'Herren',
@@ -72,20 +65,12 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
       testId: 'filter-3-fuer-1',
       options: [{ value: 'bundle', label: '3 für 1 Sets', count: 0 }]
     }
-  ];
+  ], []);
 
   useEffect(() => {
     // Calcular contagem de produtos para cada categoria
     const productData = getProductData();
     if (productData) {
-      const newFilters: FilterState = {
-        categories: [],
-        brands: [],
-        gender: [],
-        priceRange: null,
-        promotion: false
-      };
-      
       filterOptions.forEach(category => {
         if (category.options) {
           category.options.forEach(option => {
@@ -108,10 +93,8 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
           });
         }
       });
-      
-      setFilters(newFilters);
     }
-  }, []);
+  }, [filterOptions]);
 
   const handleCategoryClick = (categoryId: string) => {
     setActiveFilter(categoryId);
@@ -129,8 +112,6 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
     };
 
     if (category.options && category.options.length > 0) {
-      const option = category.options[0];
-      
       if (categoryId === 'herren') {
         newFilters.gender = ['men'];
       } else if (categoryId === 'damen') {

@@ -382,12 +382,13 @@ export function getProductData(): ProductsData | null {
   return loadProductData();
 }
 
-export default {
+const productUtils = {
   getProductByHandle,
   getProductsByBrand,
   getProductsByCategory,
   getProductsByGender,
   getProductsByType,
+  filterProducts,
   searchProducts,
   getRelatedProducts,
   getAllProducts,
@@ -403,3 +404,5 @@ export default {
   loadProductData,
   getProductData
 };
+
+export default productUtils;

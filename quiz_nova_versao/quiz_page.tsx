@@ -1,16 +1,16 @@
 "use client"
 
 import React, { useState, useEffect, useRef, useCallback } from "react"
-import { Button } from "../../components/button"
-import { RadioGroup, RadioGroupItem } from "../../components/radio-group"
-import { Label } from "../../components/label"
+import { Button } from "./button"
+import { RadioGroup, RadioGroupItem } from "./radio-group"
+import { Label } from "./label"
 import { Trophy, DollarSign } from "lucide-react"
 import Image from "next/image"
-import PriceAnchoring from "../../components/PriceAnchoring"
-import QuizHeader from "../../components/QuizHeader"
-import Footer from "../../components/Footer"
-import { trackQuizStep, useTikTokClickIdCapture } from "../../utils/tracking"
-import styles from "../../styles/animations.module.css"
+import PriceAnchoring from "../src/components/PriceAnchoring"
+import QuizHeader from "../src/components/QuizHeader"
+import Footer from "../src/components/Footer"
+import { trackQuizStep, useTikTokClickIdCapture } from "./tracking"
+import styles from "./animations.module.css"
 
 // Add animated border keyframes for progress
 const progressBarStyles = `
@@ -132,10 +132,6 @@ declare global {
       identify: (data: Record<string, unknown>) => void;
     };
     _fbq?: {
-      push: (args: unknown[]) => void;
-    };
-    fbq?: {
-      (action: string, event: string, data?: Record<string, unknown>): void;
       push: (args: unknown[]) => void;
     };
     pixelId?: string;
@@ -831,7 +827,7 @@ export default function WWESummerSlamQuiz() {
     
     // Rastrear visualização da pergunta quando gameStarted está true
     if (gameStarted && !quizCompleted) {
-      trackQuizStep('question_viewed', currentQuestion + 1);
+      trackQuizStep('question_viewed', { questionNumber: currentQuestion + 1 });
     }
   }, [currentQuestion, gameStarted, quizCompleted]);
 

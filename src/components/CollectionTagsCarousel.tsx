@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { getProductData, getUniqueValues } from '../utils/products';
+import { useState, useEffect, useMemo } from 'react';
+import { getProductData } from '../utils/products';
 
 interface CollectionTagsCarouselProps {
   className?: string;
@@ -16,7 +16,7 @@ const CollectionTagsCarousel: React.FC<CollectionTagsCarouselProps> = ({
   const [tags, setTags] = useState<string[]>([]);
   
   // Mapeamento de tags para exibição em alemão
-  const tagDisplayMap: Record<string, string> = {
+  const tagDisplayMap: Record<string, string> = useMemo(() => ({
     'herren': 'Herrendüfte',
     'männer': 'Männerdüfte', 
     'herrendüfte': 'Herrendüfte',
@@ -36,7 +36,7 @@ const CollectionTagsCarousel: React.FC<CollectionTagsCarouselProps> = ({
     'neu': 'Neu',
     'limitiert': 'Limitierte Auflage',
     'unisex': 'Unisex'
-  };
+  }), []);
 
   useEffect(() => {
     // Carregar dados dos produtos e extrair tags únicas
@@ -60,7 +60,7 @@ const CollectionTagsCarousel: React.FC<CollectionTagsCarouselProps> = ({
       const uniqueTags = [...new Set(collectionTags)];
       setTags(uniqueTags);
     }
-  }, []);
+  }, [tagDisplayMap]);
 
   const handleTagClick = (tag: string) => {
     const newTag = activeTag === tag ? null : tag;
