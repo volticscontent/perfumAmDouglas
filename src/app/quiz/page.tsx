@@ -485,9 +485,9 @@ const usePixelLoader = () => {
       return;
     }
 
-    // Verifica se os pixels estão carregados (Facebook no layout global)
+    // Verifica se o Facebook pixel está carregado (carregado no layout global)
     const checkPixels = () => {
-      return window.fbq && window.ttq;
+      return window.fbq; // Removido window.ttq pois TikTok pixel não está sendo carregado
     };
 
     // Função que verifica os pixels
@@ -502,12 +502,12 @@ const usePixelLoader = () => {
     // Inicia verificação periódica
     const checkInterval = setInterval(checkAll, 500);
 
-    // Timeout de segurança após 5 segundos
+    // Timeout de segurança após 3 segundos (reduzido pois só verifica Facebook pixel)
     const timeoutId = setTimeout(() => {
       setPixelsReady(true);
       pixelsInitialized.current = true;
       clearInterval(checkInterval);
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearInterval(checkInterval);
@@ -675,20 +675,52 @@ const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 
 // Componente DiscountProgressBar
-const DiscountProgressBar = ({ correctAnswers }: { correctAnswers: number }) => {
-  const totalQuestions = questions.length;
-  const progressPercentage = (correctAnswers / totalQuestions) * 100;
-  const discountPercentage = Math.min(correctAnswers * 10, 50); // Máximo 50% de desconto
+const DiscountProgressBar = ({ correctAnswers, answeredQuestions }: { correctAnswers: number; answeredQuestions: number }) => {
+  const discountPerAnswer = 20; // €20 por resposta
+  const maxDiscount = questions.length * discountPerAnswer; // €120 máximo (6 × 20)
+  
+  // Simular que todas as perguntas respondidas foram corretas
+  const simulatedCorrectAnswers = answeredQuestions;
+  const currentDiscount = simulatedCorrectAnswers * discountPerAnswer;
+  const progressPercentage = (currentDiscount / maxDiscount) * 100;
+
+  // Estado para animação do valor
+  const [animatedValue, setAnimatedValue] = useState(0);
+
+  // Animar o valor do desconto
+  useEffect(() => {
+    const duration = 1000; // 1 segundo
+    const steps = 60; // 60 FPS
+    const increment = currentDiscount / steps;
+    let currentStep = 0;
+
+    const timer = setInterval(() => {
+      currentStep++;
+      const newValue = Math.min(increment * currentStep, currentDiscount);
+      setAnimatedValue(Math.round(newValue));
+      
+      if (currentStep >= steps || newValue >= currentDiscount) {
+        clearInterval(timer);
+        setAnimatedValue(currentDiscount);
+      }
+    }, duration / steps);
+
+    return () => clearInterval(timer);
+  }, [currentDiscount]);
 
   return (
-    <div className="w-full bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+    <div className="w-full bg-gray-200 rounded-full h-4 my-4 overflow-hidden">
       <div 
-        className="discount-progress-bar h-full rounded-full transition-all duration-500 ease-out flex items-center justify-center text-xs font-bold text-white"
-        style={{ width: `${progressPercentage}%` }}
+        className="discount-progress-bar h-full rounded-full transition-all duration-1000 ease-in-out flex items-center justify-center text-xs font-bold text-white transform"
+        style={{ 
+          width: `${progressPercentage}%`,
+          transform: `scaleX(${progressPercentage / 100})`,
+          transformOrigin: 'left center'
+        }}
       >
-        {correctAnswers > 0 && (
-          <span className="text-shadow">
-            {discountPercentage}% OFF
+        {answeredQuestions > 0 && (
+          <span className="text-shadow transition-all duration-300 ease-in-out">
+            €{animatedValue}
           </span>
         )}
       </div>
@@ -709,6 +741,7 @@ export default function WWESummerSlamQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [answeredQuestions, setAnsweredQuestions] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -727,10 +760,8 @@ export default function WWESummerSlamQuiz() {
     };
   }, []);
 
-  // Usar o hook de captura do ttclid
-  console.log('[WWESummerSlamQuiz] Calling useTikTokClickIdCapture...')
-  useTikTokClickIdCapture();
-  console.log('[WWESummerSlamQuiz] useTikTokClickIdCapture called')
+  // Hook de captura do ttclid removido para evitar loops infinitos
+  // useTikTokClickIdCapture();
 
   // const isPixelsReady = usePixelLoader()
   const { playSound } = useAudioSystem();
@@ -767,6 +798,9 @@ export default function WWESummerSlamQuiz() {
       playSound()
     }
 
+    // Incrementar perguntas respondidas
+    setAnsweredQuestions(prev => prev + 1);
+
     // Tracking da resposta
     trackQuizStep(`question_${currentQuestion + 1}`, { answer: answerToUse });
 
@@ -794,7 +828,7 @@ export default function WWESummerSlamQuiz() {
       clearInterval(progressTimer.current);
     }
 
-    if (gameStarted && !quizCompleted) {
+    if (gameStarted && !quizCompleted && currentQuestion < questions.length) {
       progressTimer.current = setInterval(() => {
         setProgressValue(prev => {
           const newValue = prev - 1;
@@ -802,8 +836,10 @@ export default function WWESummerSlamQuiz() {
             if (progressTimer.current) {
               clearInterval(progressTimer.current);
             }
-            // Avança automaticamente para a próxima pergunta quando o tempo acabar
-            handleAnswer();
+            // Verificar se ainda estamos dentro dos limites antes de avançar
+            if (currentQuestion < questions.length && !quizCompleted) {
+              handleAnswer();
+            }
             return 100;
           }
           return newValue;
@@ -981,7 +1017,7 @@ export default function WWESummerSlamQuiz() {
 
               <div className="flex flex-col gap-4">
                 {/* Discount progress bar */}
-                <DiscountProgressBar correctAnswers={correctAnswers} />
+                <DiscountProgressBar correctAnswers={correctAnswers} answeredQuestions={answeredQuestions} />
                 
               </div>
             </div>
@@ -1070,7 +1106,7 @@ export default function WWESummerSlamQuiz() {
                 </Button>
 
                 {/* Discount progress bar instead of quiz progress */}
-                <DiscountProgressBar correctAnswers={correctAnswers} />
+                <DiscountProgressBar correctAnswers={correctAnswers} answeredQuestions={answeredQuestions} />
               </div>
             </div>
           </div>
