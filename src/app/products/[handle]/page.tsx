@@ -69,10 +69,10 @@ export default function ProductPage() {
   const { scrollY, isScrolling, hasReachedPhotoLimit, photoLimit } = useParallax()
 
   // Função para adicionar produto ao carrinho
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!product || !handle) return;
     
-    const shopifyVariant = findVariantByHandle(handle);
+    const shopifyVariant = await findVariantByHandle(handle);
     if (!shopifyVariant) {
       console.error('Produto não encontrado no Shopify:', handle);
       return;

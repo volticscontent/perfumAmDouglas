@@ -23,12 +23,12 @@ export default function Error({
           >
             Tentar novamente
           </button>
-          <a
-            href="/"
+          <button 
+            onClick={() => (window.location.href = '/')}
             className="block w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors"
           >
             Voltar ao início
-          </a>
+          </button>
         </div>
       </div>
     </div>

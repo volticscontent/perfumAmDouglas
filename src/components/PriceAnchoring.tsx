@@ -46,22 +46,6 @@ export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: (selectedK
   
   const selectedKitData = kits[0]
 
-  // Auto-rotate images
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => 
-        (prev + 1) % selectedKitData.images.length
-      )
-    }, 3000)
-    
-    return () => clearInterval(interval)
-  }, [selectedKitData.images.length])
-
-  // Reset image index when kit changes
-  useEffect(() => {
-    setCurrentImageIndex(0)
-  }, [])
-
   // Auto-scroll carousel
   useEffect(() => {
     const interval = setInterval(() => {
@@ -101,7 +85,7 @@ export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: (selectedK
       <div className="flex items-center justify-between mb-4">
         <div className="w-20 h-20 rounded-lg overflow-hidden border-1 border-[#20ca97]">
           <Image
-            src="/3-caixas.png"
+            src="/3-caixas.jpg"
             alt="temu box"
             width={80}
             height={80}
@@ -164,7 +148,7 @@ export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: (selectedK
         {onBuyClick && (
           <div className="mt-6">
             <button
-              onClick={() => onBuyClick(selectedKit)}
+              onClick={() => onBuyClick(selectedKitData.id)}
               className="w-full bg-[#2ed418] hover:bg-[#33ff00] shadow-xl shadow-gray-500/35 hover:shadow-green-200 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
             >
               Jetzt kaufen – Holen Sie sich dieses Parfüm-Set

@@ -104,7 +104,7 @@ export default function PriceAnchoring({ correctAnswers, onBuyClick }: PriceAnch
       <div className="flex items-center justify-between mb-4">
         <div className="w-20 h-20 rounded-lg overflow-hidden border-1 border-[#20ca97]">
           <Image
-            src="/3-caixas.png"
+            src="/3-caixas.jpg"
             alt="temu box"
             width={80}
             height={80}

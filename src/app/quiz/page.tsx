@@ -268,45 +268,9 @@ const SuccessNotification = ({ show, onClose }: { show: boolean; onClose: () => 
   )
 }
 
-// Falling hearts component
-const FallingHeart = ({ delay }: { delay: number }) => (
-  <div 
-    className={`absolute text-red-500 text-2xl pointer-events-none ${styles.fall}`}
-    style={{
-      left: `${Math.random() * 100}%`,
-      top: '-50px',
-      animationDelay: `${delay}ms`
-    }}
-  >
-    ❤️
-  </div>
-)
+// Remove unused FallingHeart component (lines 272-283)
 
-// Chelsea lion icon component
-const ChelseaLionIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    className="w-8 h-8"
-    fill="currentColor"
-  >
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-  </svg>
-);
-
-
-
-// Loading component for better UX
-const LoadingSpinner = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
-  const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6", 
-    lg: "w-8 h-8"
-  }
-  
-  return (
-    <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-[#4feb95] border-t-white`}></div>
-  )
-}
+// Remove unused ChelseaLionIcon component (lines 286-294)
 
 // Carrossel de imagens para substituir o VSL - COMENTADO
 /*
@@ -358,7 +322,7 @@ const ImageCarousel = () => {
 */
 
 // Componente de vídeo simplificado
-const VideoPlayer = React.memo(({ isReady }: { isReady: boolean }) => {
+const VideoPlayer = React.memo(() => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [showMuteButton, setShowMuteButton] = useState(true);
@@ -706,57 +670,16 @@ const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 
 
-// Componente do ícone de coração moderno
-const HeartIcon = ({ isLiked, onClick }: { isLiked: boolean; onClick: () => void }) => {
-  const [showBurst, setShowBurst] = useState(false);
-  
-  const handleClick = () => {
-    onClick();
-    if (!isLiked) {
-      setShowBurst(true);
-      setTimeout(() => setShowBurst(false), 700);
-    }
-  };
 
-  return (
-    <div className="relative">
-      {showBurst && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className={`absolute w-full h-full ${styles.heartBurst}`}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-red-500 rounded-full"
-                style={{
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 60}deg) translateY(-10px)`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-      
-    </div>
-  );
-};
 
-// Componente do ícone do Trustpilot
-const TrustpilotStars = () => (
-  <div className="flex items-center space-x-1">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <svg key={star} className="w-4 h-4 text-[#00b67a]" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-      </svg>
-    ))}
-  </div>
-);
+
 
 // Usar o QuizHeader simplificado
 const CompleteHeader = () => {
   return <QuizHeader />;
 };
+
+
 
 // Remover o MinimalHeader e USPHeader antigos e usar apenas o CompleteHeader
 export default function WWESummerSlamQuiz() {
@@ -787,10 +710,58 @@ export default function WWESummerSlamQuiz() {
   useTikTokClickIdCapture();
   console.log('[WWESummerSlamQuiz] useTikTokClickIdCapture called')
 
-  const isPixelsReady = usePixelLoader()
+  // const isPixelsReady = usePixelLoader()
   const { playSound } = useAudioSystem();
   const [progressValue, setProgressValue] = useState(100);
   const progressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Modificar a função de resposta com loading e scroll automático
+  const handleAnswer = useCallback(() => {
+    if (isSubmitting) return
+    
+    // Verificar se temos uma pergunta válida
+    if (currentQuestion < 0 || currentQuestion >= questions.length) {
+      console.error('Current question index out of bounds:', currentQuestion, 'Total questions:', questions.length);
+      return;
+    }
+    
+    const currentQuestionData = questions[currentQuestion];
+    if (!currentQuestionData) {
+      console.error('Pergunta atual não encontrada');
+      return;
+    }
+    
+    // Se não há resposta selecionada, usar a primeira opção como padrão
+    const answerToUse = selectedAnswer || '0';
+    console.log('Using answer:', answerToUse, 'Selected answer was:', selectedAnswer);
+    
+    setIsSubmitting(true)
+    const isCorrect = Number.parseInt(answerToUse) === currentQuestionData.correct
+
+    if (isCorrect) {
+      setCorrectAnswers(prev => prev + 1)
+      playSound('correct')
+    } else {
+      playSound('incorrect')
+    }
+
+    // Tracking da resposta
+    trackQuizStep(currentQuestion + 1, answerToUse, isCorrect);
+
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(prev => prev + 1)
+        setSelectedAnswer("")
+        setProgressValue(100)
+      } else {
+        setQuizCompleted(true)
+        const endTime = Date.now()
+        const timeTaken = Math.round((endTime - startTime) / 1000)
+        trackQuizCompletion(correctAnswers + (isCorrect ? 1 : 0), timeTaken);
+      }
+      setIsSubmitting(false)
+    }, 1500)
+  }, [isSubmitting, currentQuestion, selectedAnswer, correctAnswers, startTime, playSound]);
 
   // Remover o useEffect que adiciona os estilos
   useEffect(() => {
@@ -820,7 +791,7 @@ export default function WWESummerSlamQuiz() {
         clearInterval(progressTimer.current);
       }
     };
-  }, [gameStarted, currentQuestion, quizCompleted]);
+  }, [gameStarted, currentQuestion, quizCompleted, handleAnswer]);
 
   // Reset progress quando mudar de pergunta
   useEffect(() => {
@@ -838,7 +809,7 @@ export default function WWESummerSlamQuiz() {
   }, [showUSPPanel])
 
   // Usar o hook de delay
-  const delayedElements = useDelayedElements()
+  // const delayedElements = useDelayedElements()
 
   // Função para fechar o painel USP
   const handleUSPClose = () => {
@@ -875,100 +846,41 @@ export default function WWESummerSlamQuiz() {
     if (newWindow) newWindow.opener = null;
   }
 
-  // Modificar a função de resposta com loading e scroll automático
-  const handleAnswer = () => {
-    if (isSubmitting) return
-    
-    // Verificar se temos uma pergunta válida
-    if (currentQuestion < 0 || currentQuestion >= questions.length) {
-      console.error('Current question index out of bounds:', currentQuestion, 'Total questions:', questions.length);
-      return;
-    }
-    
-    const currentQuestionData = questions[currentQuestion];
-    if (!currentQuestionData) {
-      console.error('Pergunta atual não encontrada');
-      return;
-    }
-    
-    // Se não há resposta selecionada, usar a primeira opção como padrão
-    const answerToUse = selectedAnswer || '0';
-    console.log('Using answer:', answerToUse, 'Selected answer was:', selectedAnswer);
-    
-    setIsSubmitting(true)
-    const isCorrect = Number.parseInt(answerToUse) === currentQuestionData.correct
-    const questionNumber = currentQuestion + 1
-
-    // Sempre incrementar o contador, independente da resposta estar correta
-    setCorrectAnswers(prev => {
-      const newValue = prev + 1;
-      console.log('Discount updated:', newValue);
-      return newValue;
-    });
-
-    // Tracking de eventos - rastrear cada pergunta
-    trackQuizStep('question_answered', { questionNumber, isCorrect });
-    
-    // Sempre mostrar a notificação
-    setShowNotification(true);
-    playSound();
-
-    // Avançar diretamente para a próxima pergunta ou finalizar o quiz
-    setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion((prev) => prev + 1)
-        setSelectedAnswer("")
-        // Scroll automático para o topo ao avançar pergunta
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        setQuizCompleted(true)
-        trackQuizCompletion({ 
-          totalQuestions: questions.length, 
-          correctAnswers: correctAnswers + 1,
-          completionTime: Date.now() - startTime
-        }); // Rastrear conclusão do quiz
-        // Scroll automático para o topo ao completar quiz
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      setIsSubmitting(false)
-    }, 600)
-  }
-
   // Modificar nextQuestion com loading
-  const nextQuestion = () => {
-    setIsLoading(true)
-    
-    setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion((prev) => prev + 1)
-        setSelectedAnswer("")
-      } else {
-        setQuizCompleted(true)
-        trackQuizCompletion({ 
-          totalQuestions: questions.length, 
-          correctAnswers: correctAnswers,
-          completionTime: Date.now() - startTime
-        }); // Rastrear conclusão do quiz
-      }
-      setIsLoading(false)
-    }, 400)
-  }
+  // const nextQuestion = () => {
+  //   setIsLoading(true)
+  //   
+  //   setTimeout(() => {
+  //     if (currentQuestion < questions.length - 1) {
+  //       setCurrentQuestion((prev) => prev + 1)
+  //       setSelectedAnswer("")
+  //     } else {
+  //       setQuizCompleted(true)
+  //       trackQuizCompletion({ 
+  //         totalQuestions: questions.length, 
+  //         correctAnswers: correctAnswers,
+  //         completionTime: Date.now() - startTime
+  //       }); // Rastrear conclusão do quiz
+  //     }
+  //     setIsLoading(false)
+  //   }, 400)
+  // }
 
-  const handleRestart = () => {
-    trackQuizStep('quiz_restart'); // Rastrear reinício do quiz
-    setGameStarted(false);
-    setCurrentQuestion(0);
-    setSelectedAnswer("");
-    setCorrectAnswers(0);
-    setQuizCompleted(false);
-    setShowNotification(false);
-    // Scroll automático para o topo ao reiniciar quiz
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  // const handleRestart = () => {
+  //   trackQuizStep('quiz_restart'); // Rastrear reinício do quiz
+  //   setGameStarted(false);
+  //   setCurrentQuestion(0);
+  //   setSelectedAnswer("");
+  //   setCorrectAnswers(0);
+  //   setQuizCompleted(false);
+  //   setShowNotification(false);
+  //   // Scroll automático para o topo ao reiniciar quiz
+  //   window.scrollTo({ top: 0, behavior: 'smooth' });
+  // };
 
   const discount = correctAnswers * 20
   const originalPrice = 147.0
-  const finalPrice = Math.max(originalPrice - discount, 47.0)
+  // const finalPrice = Math.max(originalPrice - discount, 47.0)
 
   useTrackVSLView(); // Comentado junto com o VSL
 
@@ -1124,7 +1036,7 @@ export default function WWESummerSlamQuiz() {
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
-                      <LoadingSpinner size="sm" />
+                      <LoadingSpinner size="md" />
                       Verarbeitung...
                     </div>
                   ) : (
@@ -1143,34 +1055,18 @@ export default function WWESummerSlamQuiz() {
   )
 }
 
-// Discount progress bar component
-const DiscountProgressBar = ({ correctAnswers }: { correctAnswers: number }) => {
-  const discount = correctAnswers * 20;
-  const maxDiscount = 120;
-  const progressPercentage = (discount / maxDiscount) * 100;
-
-  return (
-    <div className="bg-[#ffffff] p-4 rounded-lg">
-      <div className="flex justify-center items-center">
-        <span className="text-sm text-gray-600 mr-10">Rabattfortschritt:</span>
-        <span className="font-semibold text-gray-600">€{discount} / </span>
-        <span className="text-[#26ca20] font-bold ml-5">€{maxDiscount}</span>
-      </div>
-      <div 
-        aria-valuemax={100} 
-        aria-valuemin={0} 
-        aria-valuenow={progressPercentage}
-        role="progressbar" 
-        className="relative h-4 w-full overflow-hidden rounded-full bg-gray-200 mt-2"
-      >
-        <div 
-          className="discount-progress-bar h-full transition-all duration-500 ease-out" 
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
-    </div>
-  );
-};
-
 // Usar o Footer da store
 const BasicFooter = () => <Footer />;
+
+// Loading component for better UX
+const LoadingSpinner = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
+  const sizeClasses = {
+    sm: "w-4 h-4",
+    md: "w-6 h-6", 
+    lg: "w-8 h-8"
+  }
+  
+  return (
+    <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-[#4feb95] border-t-white`}></div>
+  )
+}

@@ -1,5 +1,4 @@
-import shopifyVariants from '../../shopify-variants.json';
-
+// Importação dinâmica para evitar problemas de build
 export interface ShopifyVariant {
   handle: string;
   variant_id: number;
@@ -8,36 +7,42 @@ export interface ShopifyVariant {
   price: string;
 }
 
-// Carrega os dados do arquivo JSON
-export const getShopifyVariants = (): ShopifyVariant[] => {
-  return shopifyVariants as ShopifyVariant[];
+// Carrega os dados do arquivo JSON de forma dinâmica
+export const getShopifyVariants = async (): Promise<ShopifyVariant[]> => {
+  try {
+    const shopifyVariants = await import('../data/shopify-variants.json');
+    return shopifyVariants.default as ShopifyVariant[];
+  } catch (error) {
+    console.error('Erro ao carregar shopify-variants.json:', error);
+    return [];
+  }
 };
 
 // Encontra uma variante pelo handle
-export const findVariantByHandle = (handle: string): ShopifyVariant | undefined => {
-  return shopifyVariants.find((variant: ShopifyVariant) => variant.handle === handle);
+export const findVariantByHandle = async (handle: string): Promise<ShopifyVariant | undefined> => {
+  const variants = await getShopifyVariants();
+  return variants.find((variant: ShopifyVariant) => variant.handle === handle);
 };
 
-// Cria URL do produto no Shopify
-export const getShopifyProductUrl = (handle: string): string => {
-  const variant = findVariantByHandle(handle);
-  if (!variant) return '';
-  
-  return `https://cc1ve6-49.myshopify.com/products/${handle}`;
+// Função para obter URL do produto no Shopify
+export const getShopifyProductUrl = async (handle: string): Promise<string> => {
+  const variant = await findVariantByHandle(handle);
+  return variant ? `https://perfume-alemanha.myshopify.com/products/${handle}` : '';
 };
 
-// Cria URL de checkout direto no Shopify
-export const getShopifyCheckoutUrl = (variantId: number, quantity: number = 1): string => {
-  return `https://cc1ve6-49.myshopify.com/cart/${variantId}:${quantity}`;
+// Função para obter URL de checkout direto
+export const getShopifyCheckoutUrl = async (variantId: number, quantity: number = 1): Promise<string> => {
+  return `https://perfume-alemanha.myshopify.com/cart/${variantId}:${quantity}`;
 };
 
-// Cria URL de checkout com múltiplos produtos
+// Função para checkout com múltiplos produtos
 export const getShopifyMultiCheckoutUrl = (items: { variantId: number; quantity: number }[]): string => {
   const cartItems = items.map(item => `${item.variantId}:${item.quantity}`).join(',');
-  return `https://cc1ve6-49.myshopify.com/cart/${cartItems}`;
+  return `https://perfume-alemanha.myshopify.com/cart/${cartItems}`;
 };
 
 // Verifica se um produto existe no Shopify
-export const isProductInShopify = (handle: string): boolean => {
-  return !!findVariantByHandle(handle);
+export const isProductInShopify = async (handle: string): Promise<boolean> => {
+  const variant = await findVariantByHandle(handle);
+  return !!variant;
 };

@@ -1,10 +1,4 @@
-
-// Configuração do Shopify Buy Button
-const SHOPIFY_BUY_CONFIG = {
-  domain: 'cc1ve6-49.myshopify.com',
-  storefrontAccessToken: 'dd92550ca3c65a456743670246fa5c98',
-  publicDomain: 'douglasparfum.shop',
-  products: [
+[
   {
     "handle": "3-piece-premium-fragrance-collection-set-28",
     "variant_id": 42237011230818,
@@ -314,48 +308,3 @@ const SHOPIFY_BUY_CONFIG = {
     "price": "49.90"
   }
 ]
-};
-
-// Função para inicializar Buy Button para um produto específico
-function initBuyButton(productId, containerId) {
-  const client = ShopifyBuy.buildClient({
-    domain: SHOPIFY_BUY_CONFIG.domain,
-    storefrontAccessToken: SHOPIFY_BUY_CONFIG.storefrontAccessToken
-  });
-  
-  ShopifyBuy.UI.onReady(client).then(function (ui) {
-    ui.createComponent('product', {
-      id: productId,
-      node: document.getElementById(containerId),
-      moneyFormat: '€%7B%7Bamount_with_comma_separator%7D%7D',
-      options: {
-        "product": {
-          "styles": {
-            "button": {
-              "font-family": "Arial, sans-serif",
-              "font-size": "16px",
-              "padding-top": "16px",
-              "padding-bottom": "16px",
-              "background-color": "#333333",
-              "border-radius": "8px",
-              "padding-left": "32px",
-              "padding-right": "32px",
-              ":hover": {
-                "background-color": "#000000"
-              }
-            }
-          },
-          "buttonDestination": "checkout",
-          "text": {
-            "button": "Jetzt kaufen"
-          }
-        }
-      }
-    });
-  });
-}
-
-// Exportar configuração
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { SHOPIFY_BUY_CONFIG, initBuyButton };
-}
