@@ -10,116 +10,7 @@ import QuizHeader from "../../components/QuizHeader"
 import Footer from "../../components/Footer"
 import { trackQuizStep, trackQuizCompletion, useTikTokClickIdCapture } from "../../utils/tracking"
 import styles from "../../styles/animations.module.css"
-
-// Add animated border keyframes for progress
-const progressBarStyles = `
-  @keyframes progress {
-    from { width: 100%; }
-    to { width: 0%; }
-  }
-  
-  @keyframes progressReverse {
-    from { width: 0%; }
-    to { width: 100%; }
-  }
-
-  @keyframes borderGlow {
-    0% {
-      border-color: #ff0000;
-
-    }
-    25% {
-      border-color: #ff6600;
-
-    }
-    50% {
-      border-color: #ffff00;
-
-    }
-    75% {
-      border-color: #ff6600;
-
-    }
-    100% {
-      border-color: #ff0000;
-
-    }
-  }
-
-  @keyframes discountShine {
-    0% {
-      background-position: -100% 0;
-    }
-    100% {
-      background-position: 100% 0;
-    }
-  }
-
-  .discount-progress-bar {
-    background: linear-gradient(90deg, #88ff59, #1eff00, #88ff59);
-    background-size: 200% 100%;
-    animation: discountShine 2s ease-in-out infinite;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .discount-progress-bar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    animation: discountShine 2s ease-in-out infinite;
-  }
-
-  .animated-border {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .animated-border::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #ff0000, #ff6600, #ffff00, #ff6600, #ff0000);
-    background-size: 300% 300%;
-    border-radius: 14px;
-    z-index: -1;
-    animation: borderAnimation 3s ease-in-out infinite;
-  }
-
-  @keyframes borderAnimation {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .progress-container {
-    width: 100%;
-    height: 8px;
-    background-color: #e5e7eb;
-    border-radius: 9999px;
-    overflow: hidden;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background: linear-gradient(to right, #20ca97, #00ffb3);
-    border-radius: 9999px;
-    transition: width 0.1s linear;
-  }
-`
+import "../../styles/quiz-progress.css"
 
 // Declare tipos globais para os pixels
 declare global {
@@ -674,14 +565,13 @@ const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 
 
-// Componente DiscountProgressBar
+// Componente DiscountProgressBar corrigido
 const DiscountProgressBar = ({ correctAnswers, answeredQuestions }: { correctAnswers: number; answeredQuestions: number }) => {
   const discountPerAnswer = 20; // €20 por resposta
   const maxDiscount = questions.length * discountPerAnswer; // €120 máximo (6 × 20)
   
-  // Simular que todas as perguntas respondidas foram corretas
-  const simulatedCorrectAnswers = answeredQuestions;
-  const currentDiscount = simulatedCorrectAnswers * discountPerAnswer;
+  // Usar as perguntas respondidas para calcular o desconto
+  const currentDiscount = answeredQuestions * discountPerAnswer;
   const progressPercentage = (currentDiscount / maxDiscount) * 100;
 
   // Estado para animação do valor
@@ -709,20 +599,22 @@ const DiscountProgressBar = ({ correctAnswers, answeredQuestions }: { correctAns
   }, [currentDiscount]);
 
   return (
-    <div className="w-full bg-gray-200 rounded-full h-4 my-4 overflow-hidden">
-      <div 
-        className="discount-progress-bar h-full rounded-full transition-all duration-1000 ease-in-out flex items-center justify-center text-xs font-bold text-white transform"
-        style={{ 
-          width: `${progressPercentage}%`,
-          transform: `scaleX(${progressPercentage / 100})`,
-          transformOrigin: 'left center'
-        }}
-      >
-        {answeredQuestions > 0 && (
-          <span className="text-shadow transition-all duration-300 ease-in-out">
-            €{animatedValue}
-          </span>
-        )}
+    <div className="bg-[#ffffff] p-4 rounded-lg">
+      <div className="flex justify-center items-center mb-2">
+        <span className="text-sm text-gray-600 mr-2">Rabatt-Fortschritt:</span>
+        <span className="font-semibold text-gray-600">€{animatedValue} / </span>
+        <span className="text-[#26ca20] font-bold ml-1">€{maxDiscount}</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <div 
+          className="h-full rounded-full transition-all duration-1000 ease-out"
+          style={{ 
+            width: `${progressPercentage}%`,
+            background: 'linear-gradient(90deg, #88ff59, #1eff00, #88ff59)',
+            backgroundSize: '200% 100%',
+            animation: progressPercentage > 0 ? 'discountShine 2s ease-in-out infinite' : 'none'
+          }}
+        />
       </div>
     </div>
   );
@@ -749,16 +641,7 @@ export default function WWESummerSlamQuiz() {
   const [showUSPPanel, setShowUSPPanel] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
 
-  // Add styles to document head
-  useEffect(() => {
-    const styleElement = document.createElement("style");
-    styleElement.innerHTML = progressBarStyles;
-    document.head.appendChild(styleElement);
-    
-    return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
+  // Estilos CSS agora são importados via arquivo separado
 
   // Hook de captura do ttclid removido para evitar loops infinitos
   // useTikTokClickIdCapture();
@@ -822,13 +705,16 @@ export default function WWESummerSlamQuiz() {
     }, 1500)
   }, [isSubmitting, currentQuestion, selectedAnswer, correctAnswers, startTime, playSound]);
 
-  // Remover o useEffect que adiciona os estilos
+  // Remover o useEffect que adiciona os estilos - corrigido
   useEffect(() => {
     if (progressTimer.current) {
       clearInterval(progressTimer.current);
     }
 
     if (gameStarted && !quizCompleted && currentQuestion < questions.length) {
+      // Reset progress value quando iniciar nova pergunta
+      setProgressValue(100);
+      
       progressTimer.current = setInterval(() => {
         setProgressValue(prev => {
           const newValue = prev - 1;
