@@ -6,9 +6,9 @@ import { RadioGroup, RadioGroupItem } from "./radio-group"
 import { Label } from "./label"
 import { Trophy, DollarSign } from "lucide-react"
 import Image from "next/image"
-import PriceAnchoring from "../perfumAmDouglas/src/components/PriceAnchoring"
-import QuizHeader from "../perfumAmDouglas/src/components/QuizHeader"
-import Footer from "../perfumAmDouglas/src/components/Footer"
+import PriceAnchoring from "../src/components/PriceAnchoring"
+import QuizHeader from "../src/components/QuizHeader"
+import Footer from "../src/components/Footer"
 import { trackQuizStep, useTikTokClickIdCapture } from "./tracking"
 import styles from "./animations.module.css"
 
@@ -1037,7 +1037,7 @@ export default function WWESummerSlamQuiz() {
           <div className="flex-grow container mx-auto px-4 py-4">
             <div className="space-y-4">
               <div className="transform transition-all duration-500">
-                <PriceAnchoring correctAnswers={correctAnswers} onBuyClick={handleBuyNowClick} />
+                <PriceAnchoring onBuyClick={handleBuyNowClick} />
               </div>
 
               <div className="flex flex-col gap-4">

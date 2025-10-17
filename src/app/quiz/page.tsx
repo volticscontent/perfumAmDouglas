@@ -674,6 +674,28 @@ const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 
 
+// Componente DiscountProgressBar
+const DiscountProgressBar = ({ correctAnswers }: { correctAnswers: number }) => {
+  const totalQuestions = questions.length;
+  const progressPercentage = (correctAnswers / totalQuestions) * 100;
+  const discountPercentage = Math.min(correctAnswers * 10, 50); // Máximo 50% de desconto
+
+  return (
+    <div className="w-full bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+      <div 
+        className="discount-progress-bar h-full rounded-full transition-all duration-500 ease-out flex items-center justify-center text-xs font-bold text-white"
+        style={{ width: `${progressPercentage}%` }}
+      >
+        {correctAnswers > 0 && (
+          <span className="text-shadow">
+            {discountPercentage}% OFF
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Usar o QuizHeader simplificado
 const CompleteHeader = () => {
   return <QuizHeader />;
@@ -740,13 +762,13 @@ export default function WWESummerSlamQuiz() {
 
     if (isCorrect) {
       setCorrectAnswers(prev => prev + 1)
-      playSound('correct')
+      playSound()
     } else {
-      playSound('incorrect')
+      playSound()
     }
 
     // Tracking da resposta
-    trackQuizStep(currentQuestion + 1, answerToUse, isCorrect);
+    trackQuizStep(`question_${currentQuestion + 1}`, { answer: answerToUse });
 
     setTimeout(() => {
       if (currentQuestion < questions.length - 1) {
@@ -757,7 +779,10 @@ export default function WWESummerSlamQuiz() {
         setQuizCompleted(true)
         const endTime = Date.now()
         const timeTaken = Math.round((endTime - startTime) / 1000)
-        trackQuizCompletion(correctAnswers + (isCorrect ? 1 : 0), timeTaken);
+        trackQuizCompletion({ 
+          score: correctAnswers + (isCorrect ? 1 : 0),
+          timeTaken: timeTaken
+        });
       }
       setIsSubmitting(false)
     }, 1500)
@@ -838,7 +863,7 @@ export default function WWESummerSlamQuiz() {
     
     // Links dos produtos baseados no kit selecionado
     const productLinks = {
-      "john-cena": "http://localhost:3000/",
+      "john-cena": "http://store.douglasparfum.shop/",
     };
     
     const url = productLinks[selectedKit as keyof typeof productLinks] || productLinks["john-cena"];
@@ -907,7 +932,7 @@ export default function WWESummerSlamQuiz() {
               <div className="space-y-10">
                 <div className="animate-scaleIn">
                   {/* <VideoPlayer isReady={true} /> */}
-                  <VideoPlayer isReady={true} />
+                  <VideoPlayer />
                 </div>
 
                 <div className="bg-[#9bdcd2] text-center py-5 px-5 text-sm relative rounded-xl">
@@ -951,7 +976,7 @@ export default function WWESummerSlamQuiz() {
           <div className="flex-grow container mx-auto px-4 py-4">
             <div className="space-y-4">
               <div className="transform transition-all duration-500">
-                <PriceAnchoring correctAnswers={correctAnswers} onBuyClick={handleBuyNowClick} />
+                <PriceAnchoring onBuyClick={handleBuyNowClick} />
               </div>
 
               <div className="flex flex-col gap-4">

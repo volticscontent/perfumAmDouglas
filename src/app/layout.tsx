@@ -3,7 +3,6 @@ import { Inter, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/contexts/CartContext";
 import CartSidebar from "@/components/CartSidebar";
-import Script from "next/script";
 
 // Configuração das fontes otimizadas
 const inter = Inter({
@@ -37,12 +36,9 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
-      </head>
-      <body className={`${inter.variable} ${nunitoSans.variable} antialiased font-sans`}>
+        
         {/* Meta Pixel Code */}
-        <Script
-          id="facebook-pixel"
-          strategy="afterInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s)
@@ -55,22 +51,21 @@ export default function RootLayout({
               'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '1423497222043626');
               fbq('track', 'PageView');
-            `
+            `,
           }}
         />
         <noscript>
-          <img 
-            height="1" 
-            width="1" 
-            style={{display: 'none'}}
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=1423497222043626&ev=PageView&noscript=1"
+            alt=""
           />
         </noscript>
         
         {/* Utmify Pixel Script */}
-        <Script
-          id="utmify-pixel"
-          strategy="afterInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               window.pixelId = "68cc684e0b82fb79eb53e0fe";
@@ -79,18 +74,20 @@ export default function RootLayout({
               a.setAttribute("defer", "");
               a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
               document.head.appendChild(a);
-            `
+            `,
           }}
         />
         
         {/* Utmify UTM Script */}
-        <Script
+        <script
           src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-          strategy="afterInteractive"
-          data-utmify-prevent-xcod-sck
-          data-utmify-prevent-subids
+          data-utmify-prevent-xcod-sck=""
+          data-utmify-prevent-subids=""
+          async
+          defer
         />
-        
+      </head>
+      <body className={`${inter.variable} ${nunitoSans.variable} antialiased font-sans`}>
         <CartProvider>
           {children}
           <CartSidebar />

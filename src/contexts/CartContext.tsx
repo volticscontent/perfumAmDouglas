@@ -315,8 +315,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (typeof window === 'undefined') {
-    // Durante o SSR/prerendering, retorna um contexto vazio
+  
+  // Durante o SSR/prerendering, retorna um contexto vazio
+  if (typeof window === 'undefined' || context === undefined) {
     return {
       state: { items: [], isOpen: false, totalItems: 0, totalPrice: 0 },
       addItem: () => {},
@@ -329,8 +330,6 @@ export const useCart = () => {
       getShopifyCheckoutUrl: () => ''
     };
   }
-  if (context === undefined) {
-    throw new Error('useCart deve ser usado dentro de um CartProvider');
-  }
+  
   return context;
 };
