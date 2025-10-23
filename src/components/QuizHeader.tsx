@@ -5,11 +5,6 @@ import Link from 'next/link';
 export default function QuizHeader() {
   return (
     <header className="w-full">
-      {/* Banner Promocional */}
-      <div className="bg-[#9bdcd2] text-black text-center py-3 px-5 text-sm relative">
-        <span className="font-thin">Sale Sunday: Bis zu -55% auf über 350 Topseller!</span>
-        <span className="ml-2 text-xs opacity-75">ℹ️</span>
-      </div>
 
       {/* Header Principal - Apenas Logo */}
       <div className="bg-white border-b border-gray-200">

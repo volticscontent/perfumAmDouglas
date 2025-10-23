@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "../../components/button"
 import { RadioGroup, RadioGroupItem } from "../../components/radio-group"
 import { Label } from "../../components/label"
@@ -394,6 +395,44 @@ const useAudioSystem = () => {
   return { playSound, isInitialized };
 };
 
+// Componente do popup de timeout
+const TimeoutPopup = ({ show, onRestart, onClose }: { show: boolean; onRestart: () => void; onClose: () => void }) => {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg max-w-md w-full p-6 text-center">
+        <div className="mb-4">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Zeit abgelaufen!</h2>
+          <p className="text-gray-600 mb-6">
+            Die Zeit für diese Frage ist abgelaufen. Möchten Sie das Quiz von vorne beginnen?
+          </p>
+        </div>
+        <div className="flex gap-3 justify-center">
+          <Button
+            onClick={onRestart}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
+          >
+            Quiz neu starten
+          </Button>
+          <Button
+            onClick={onClose}
+            variant="outline"
+            className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2 rounded-lg font-medium"
+          >
+            Schließen
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Componente do painel USP - versão minimalista Adidas
 const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   if (!isOpen) return null
@@ -540,6 +579,7 @@ export default function WWESummerSlamQuiz() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showUSPPanel, setShowUSPPanel] = useState(false);
+  const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
 
   // Hook do contexto UTM para tracking
@@ -622,6 +662,36 @@ export default function WWESummerSlamQuiz() {
     }, 1500)
   }, [isSubmitting, currentQuestion, selectedAnswer, correctAnswers, startTime, playSound, trackQuizQuestion, trackQuizResultViewed]);
 
+  // Função para reiniciar o quiz
+  const handleRestartQuiz = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswer('');
+    setCorrectAnswers(0);
+    setAnsweredQuestions(0);
+    setQuizCompleted(false);
+    setShowNotification(false);
+    setShowTimeoutPopup(false);
+    setProgressValue(100);
+    setGameStarted(true);
+    setStartTime(Date.now());
+  };
+
+  // Função para fechar o popup de timeout
+  const handleCloseTimeoutPopup = () => {
+    setShowTimeoutPopup(false);
+    // Avançar para a próxima pergunta mesmo sem resposta
+    setAnsweredQuestions(prev => prev + 1);
+    
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(prev => prev + 1);
+        setSelectedAnswer('');
+      } else {
+        setQuizCompleted(true);
+      }
+    }, 100);
+  };
+
   // Timer para controlar o progresso da pergunta
   useEffect(() => {
     if (progressTimer.current) {
@@ -636,10 +706,8 @@ export default function WWESummerSlamQuiz() {
             if (progressTimer.current) {
               clearInterval(progressTimer.current);
             }
-            // Verificar se ainda estamos dentro dos limites antes de avançar
-            if (currentQuestion < questions.length && !quizCompleted) {
-              handleAnswer();
-            }
+            // Mostrar popup de timeout ao invés de avançar automaticamente
+            setShowTimeoutPopup(true);
             return 0;
           }
           return newValue;
@@ -750,21 +818,20 @@ export default function WWESummerSlamQuiz() {
           <div className="flex-grow">
             <div className="container mx-auto px-2 py-10">
               <div className="text-center mb-10 animate-fadeIn">
-                <h1 className="text-4xl font-normal font-thin text-gray-900">Nachricht vom CEO von Douglas</h1>
+                <h1 className="text-4xl font-[Playfair_Display] text-gray-900">Nachricht vom CEO von Douglas</h1>
               </div>
               
-              <div className="space-y-10">
+              <div className="space-y-12">
                 <div className="animate-scaleIn">
                   {/* <VideoPlayer isReady={true} /> */}
                   <VideoPlayer />
                 </div>
 
-                <div className="bg-[#9bdcd2] text-center py-5 px-5 text-sm relative rounded-xl">
-                  <blockquote className="text-1xl md:text-lg text-[#020202] font-thin text-center leading-relaxed">
+                <div className="bg-[#243b37] text-center py-5 px-5 text-sm relative rounded-xl">
+                  <blockquote className="text-1xl md:text-lg text-[#ffffff] font-[Playfair_Display] text-center leading-relaxed">
                     &quot;Beantworte 6 Fragen zu deinen Parfümvorlieben und erhalte 120 € Rabatt auf ein Parfüm-Set.&quot;
                   </blockquote>
                 </div>
-
                 <Button
                   onClick={handleStartQuiz}
                   disabled={isLoading}
@@ -783,6 +850,13 @@ export default function WWESummerSlamQuiz() {
                     </>
                   )}
                 </Button>
+                {/* Seção de envio */}
+              <div className="flex justify-center items-center gap-6">
+               <Image src="/shipping_images/dhl.svg" alt="DHL" width={40} height={40} className="h-12 w-auto" />
+               <Image src="/shipping_images/dhl-express.svg" alt="DHL Express" width={40} height={40} className="h-12 w-auto border-1 border-gray-200" />
+               <Image src="/shipping_images/hermes.svg" alt="Hermes" width={40} height={40} className="h-12 w-auto" />
+               <Image src="/shipping_images/co2-neutraler-versand.svg" alt="CO2 neutraler Versand" width={40} height={40} className="h-12 w-auto" />
+              </div>
               </div>
             </div>
           </div>
@@ -824,15 +898,21 @@ export default function WWESummerSlamQuiz() {
         <div className="flex-grow container mx-auto px-1 py-5">
           <SuccessNotification show={showNotification} onClose={() => setShowNotification(false)} />
 
+          <TimeoutPopup 
+            show={showTimeoutPopup} 
+            onRestart={handleRestartQuiz} 
+            onClose={handleCloseTimeoutPopup} 
+          />
+          
           <div className="w-full max-w-2xl mx-auto">
             <div className="mb-6 animate-fadeIn">
               <div className="flex justify-center mb-4">
                 <div className="text-center">
                   <p className="text-sm text-gray-600">Ihr Rabatt</p>
                   <p className={`text-2xl font-bold text-[#4ada12] transform transition-all duration-500 ${
-                    correctAnswers > 0 ? 'scale-125 animate-pulse' : ''
+                    answeredQuestions > 0 ? 'scale-125 animate-pulse' : ''
                   }`}>
-                    €{correctAnswers * 20}
+                    €{answeredQuestions * 20}
                   </p>
                   <p className="text-xs text-gray-500">Teilnahmebelohnung</p>
                 </div>
