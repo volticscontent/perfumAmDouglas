@@ -607,7 +607,6 @@ export default function WWESummerSlamQuiz() {
       if (currentQuestion < questions.length - 1) {
         setCurrentQuestion(prev => prev + 1)
         setSelectedAnswer("")
-        setProgressValue(100)
       } else {
         setQuizCompleted(true)
         const endTime = Date.now()
@@ -623,16 +622,13 @@ export default function WWESummerSlamQuiz() {
     }, 1500)
   }, [isSubmitting, currentQuestion, selectedAnswer, correctAnswers, startTime, playSound, trackQuizQuestion, trackQuizResultViewed]);
 
-  // Remover o useEffect que adiciona os estilos - corrigido
+  // Timer para controlar o progresso da pergunta
   useEffect(() => {
     if (progressTimer.current) {
       clearInterval(progressTimer.current);
     }
 
     if (gameStarted && !quizCompleted && currentQuestion < questions.length) {
-      // Reset progress value quando iniciar nova pergunta
-      setProgressValue(100);
-      
       progressTimer.current = setInterval(() => {
         setProgressValue(prev => {
           const newValue = prev - 1;
@@ -644,7 +640,7 @@ export default function WWESummerSlamQuiz() {
             if (currentQuestion < questions.length && !quizCompleted) {
               handleAnswer();
             }
-            return 100;
+            return 0;
           }
           return newValue;
         });
@@ -656,13 +652,17 @@ export default function WWESummerSlamQuiz() {
         clearInterval(progressTimer.current);
       }
     };
-  }, [gameStarted, currentQuestion, quizCompleted, handleAnswer]);
+  }, [gameStarted, quizCompleted, currentQuestion, handleAnswer]);
 
-  // Reset progress quando mudar de pergunta
+  // Reset progress value apenas quando uma nova pergunta é carregada (não quando resposta é selecionada)
   useEffect(() => {
-    setProgressValue(100);
-    
-    // Rastrear visualização da pergunta quando gameStarted está true
+    if (gameStarted && !quizCompleted && currentQuestion < questions.length) {
+      setProgressValue(100);
+    }
+  }, [currentQuestion, gameStarted, quizCompleted]);
+
+  // Rastrear visualização da pergunta quando gameStarted está true
+  useEffect(() => {
     if (gameStarted && !quizCompleted) {
       trackQuizStep('question_viewed', { questionNumber: currentQuestion + 1 });
     }
