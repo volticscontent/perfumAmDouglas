@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { useUTM } from './UTMContext';
 
 export interface CartItem {
   handle: string;
@@ -163,6 +164,7 @@ const initialState: CartState = {
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const { utmData } = useUTM(); // Acessar dados dos UTMs
 
   // Carregar carrinho do localStorage na inicialização
   useEffect(() => {
@@ -189,7 +191,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
     
-    // Track add to cart event for Meta Pixel
+    // ATUALIZADO: Usar sistema de tracking unificado com evento NATIVO
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'AddToCart', {
         content_ids: [item.variant_id.toString()],
@@ -202,7 +204,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Track add to cart event for Utmify
     if (typeof window !== 'undefined' && window.pixelId) {
       try {
-        fetch(`https://api.utmify.com.br/tracking/v1/events`, {
+        const apiUrl = process.env.NEXT_PUBLIC_UTMIFY_API_URL || 'https://api.utmify.com.br';
+        fetch(`${apiUrl}/tracking/v1/events`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -218,9 +221,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
               product_title: item.title
             }
           })
-        }).catch(error => console.log('Utmify tracking error:', error));
+        }).catch(error => {
+          // Silently handle tracking errors in development
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Utmify tracking error (development):', error.message);
+          }
+        });
       } catch (error) {
-        console.log('Utmify tracking error:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Utmify tracking error (development):', error);
+        }
       }
     }
   };
@@ -252,7 +262,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getShopifyCheckoutUrl = () => {
     if (state.items.length === 0) return '';
     
-    // Track initiate checkout event for Meta Pixel
+    // ATUALIZADO: Usar sistema de tracking unificado com evento NATIVO
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'InitiateCheckout', {
         content_ids: state.items.map(item => item.variant_id.toString()),
@@ -266,7 +276,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Track initiate checkout event for Utmify
     if (typeof window !== 'undefined' && window.pixelId) {
       try {
-        fetch(`https://api.utmify.com.br/tracking/v1/events`, {
+        const apiUrl = process.env.NEXT_PUBLIC_UTMIFY_API_URL || 'https://api.utmify.com.br';
+        fetch(`${apiUrl}/tracking/v1/events`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -282,16 +293,43 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
               num_items: state.totalItems
             }
           })
-        }).catch(error => console.log('Utmify tracking error:', error));
+        }).catch(error => {
+          // Silently handle tracking errors in development
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Utmify tracking error (development):', error.message);
+          }
+        });
       } catch (error) {
-        console.log('Utmify tracking error:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Utmify tracking error (development):', error);
+        }
       }
     }
     
-    const baseUrl = 'https://cc1ve6-49.myshopify.com/cart/';
+    const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'cc1ve6-49.myshopify.com';
+    const baseUrl = `https://${domain}/cart/`;
     const cartItems = state.items.map(item => `${item.variant_id}:${item.quantity}`).join(',');
     
-    return `${baseUrl}${cartItems}`;
+    // Adicionar UTMs como parâmetros de URL se existirem
+    const utmParams = new URLSearchParams();
+    
+    // Adicionar UTMs padrão
+    if (utmData.utm_source) utmParams.append('utm_source', utmData.utm_source);
+    if (utmData.utm_medium) utmParams.append('utm_medium', utmData.utm_medium);
+    if (utmData.utm_campaign) utmParams.append('utm_campaign', utmData.utm_campaign);
+    if (utmData.utm_content) utmParams.append('utm_content', utmData.utm_content);
+    if (utmData.utm_term) utmParams.append('utm_term', utmData.utm_term);
+    
+    // Adicionar Click IDs
+    if (utmData.gclid) utmParams.append('gclid', utmData.gclid);
+    if (utmData.fbclid) utmParams.append('fbclid', utmData.fbclid);
+    if (utmData.ttclid) utmParams.append('ttclid', utmData.ttclid);
+    
+    // Construir URL final com UTMs
+    const utmString = utmParams.toString();
+    const finalUrl = utmString ? `${baseUrl}${cartItems}?${utmString}` : `${baseUrl}${cartItems}`;
+    
+    return finalUrl;
   };
 
   const value: CartContextType = {

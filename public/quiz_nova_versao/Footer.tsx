@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const Footer = () => {
   return (
@@ -83,19 +84,19 @@ const Footer = () => {
           <div className="text-center">
             <h4 className="font-medium text-black mb-4">Sicher bezahlen</h4>
             <div className="flex flex-wrap justify-center items-center gap-4 mb-4">
-              <img src="/payment/visa.svg" alt="Visa" className="h-8 w-auto" />
-              <img src="/payment/mastercard.svg" alt="Mastercard" className="h-8 w-auto" />
-              <img src="/payment/amex.svg" alt="American Express" className="h-8 w-auto" />
-              <img src="/payment/paypal.svg" alt="PayPal" className="h-8 w-auto" />
-              <img src="/payment/klarna.svg" alt="Klarna" className="h-8 w-auto" />
-              <img src="/payment/applepay.svg" alt="Apple Pay" className="h-8 w-auto" />
-              <img src="/payment/diners.svg" alt="Diners Club" className="h-8 w-auto" />
-              <img src="/payment/discover.svg" alt="Discover" className="h-8 w-auto" />
+              <Image src="/payment/visa.svg" alt="Visa" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/mastercard.svg" alt="Mastercard" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/amex.svg" alt="American Express" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/paypal.svg" alt="PayPal" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/klarna.svg" alt="Klarna" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/applepay.svg" alt="Apple Pay" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/diners.svg" alt="Diners Club" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/discover.svg" alt="Discover" width={32} height={32} className="h-8 w-auto" />
             </div>
             <div className="flex justify-center items-center gap-4">
-              <img src="/payment/rechnung.svg" alt="Rechnung" className="h-8 w-auto" />
-              <img src="/payment/gutscheinkarte.svg" alt="Gutscheinkarte" className="h-8 w-auto" />
-              <img src="/payment/beauty-card-premium.svg" alt="Beauty Card Premium" className="h-8 w-auto" />
+              <Image src="/payment/rechnung.svg" alt="Rechnung" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/gutscheinkarte.svg" alt="Gutscheinkarte" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/payment/beauty-card-premium.svg" alt="Beauty Card Premium" width={32} height={32} className="h-8 w-auto" />
             </div>
           </div>
         </div>
@@ -105,10 +106,10 @@ const Footer = () => {
           <div className="text-center">
             <h4 className="font-medium text-black mb-4">Schnell versendet</h4>
             <div className="flex justify-center items-center gap-6">
-              <img src="/shipping_images/dhl.svg" alt="DHL" className="h-10 w-auto" />
-              <img src="/shipping_images/dhl-express.svg" alt="DHL Express" className="h-10 w-auto" />
-              <img src="/shipping_images/hermes.svg" alt="Hermes" className="h-10 w-auto" />
-              <img src="/shipping_images/co2-neutraler-versand.svg" alt="CO2 neutraler Versand" className="h-10 w-auto" />
+              <Image src="/shipping_images/dhl.svg" alt="DHL" width={40} height={40} className="h-10 w-auto" />
+              <Image src="/shipping_images/dhl-express.svg" alt="DHL Express" width={40} height={40} className="h-10 w-auto" />
+              <Image src="/shipping_images/hermes.svg" alt="Hermes" width={40} height={40} className="h-10 w-auto" />
+              <Image src="/shipping_images/co2-neutraler-versand.svg" alt="CO2 neutraler Versand" width={40} height={40} className="h-10 w-auto" />
             </div>
             <p className="text-sm text-gray-600 mt-4">Alle Preise inkl. gesetzl. MwSt zzgl. <a href="#" className="text-blue-600 hover:underline">Versandkosten</a>.</p>
           </div>
@@ -120,10 +121,10 @@ const Footer = () => {
             <h4 className="font-medium text-black mb-4">Douglas App</h4>
             <div className="flex justify-center items-center gap-4">
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/app_images/google-play-store.svg" alt="Google Play Store" className="h-12 w-auto" />
+                <Image src="/app_images/google-play-store.svg" alt="Google Play Store" width={48} height={48} className="h-12 w-auto" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/app_images/apple-store.svg" alt="App Store" className="h-12 w-auto" />
+                <Image src="/app_images/apple-store.svg" alt="App Store" width={48} height={48} className="h-12 w-auto" />
               </a>
             </div>
           </div>
@@ -135,25 +136,25 @@ const Footer = () => {
             <h4 className="font-medium text-black mb-4">Douglas folgen</h4>
             <div className="flex justify-center space-x-4">
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/facebook.svg" alt="Facebook" className="w-8 h-8" />
+                <Image src="/general_images/facebook.svg" alt="Facebook" width={32} height={32} className="w-8 h-8" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/instagram.svg" alt="Instagram" className="w-8 h-8" />
+                <Image src="/general_images/instagram.svg" alt="Instagram" width={32} height={32} className="w-8 h-8" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/youtube.svg" alt="YouTube" className="w-8 h-8" />
+                <Image src="/general_images/youtube.svg" alt="YouTube" width={32} height={32} className="w-8 h-8" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/pinterest.svg" alt="Pinterest" className="w-8 h-8" />
+                <Image src="/general_images/pinterest.svg" alt="Pinterest" width={32} height={32} className="w-8 h-8" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/tiktok.svg" alt="TikTok" className="w-8 h-8" />
+                <Image src="/general_images/tiktok.svg" alt="TikTok" width={32} height={32} className="w-8 h-8" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/linkedin.svg" alt="LinkedIn" className="w-8 h-8" />
+                <Image src="/general_images/linkedin.svg" alt="LinkedIn" width={32} height={32} className="w-8 h-8" />
               </a>
               <a href="#" className="hover:opacity-80 transition-opacity">
-                <img src="/general_images/x.svg" alt="X (Twitter)" className="w-8 h-8" />
+                <Image src="/general_images/x.svg" alt="X (Twitter)" width={32} height={32} className="w-8 h-8" />
               </a>
             </div>
           </div>

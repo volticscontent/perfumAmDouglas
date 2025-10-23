@@ -3,49 +3,9 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-interface Kit {
-  id: string
-  name: string
-  wrestler: string
-  price: number
-  originalPrice: number
-  savings: number
-  description: string
-  items: string[]
-  images: string[]
-}
-
-const kits: Kit[] = [
-  {
-    id: "luxury-perfumes",
-    name: "3 Luxus-Parfüms – Exklusives Online-Set",
-    wrestler: "Premium",
-    price: 49.99,
-    originalPrice: 169.99,
-    savings: 120,
-    description: "3 Premium Duft-Kollektion",
-    items: [
-      "Elegante Rose & Bergamotte (50ml)",
-      "Mysteriöses Oud & Vanille (50ml)", 
-      "Frische Zitrus & Zeder (50ml)",
-      "Premium Geschenkbox",
-      "Exklusiver Online-Zugang",
-      "Zeitlich begrenztes Angebot"
-    ],
-    images: [
-      "/perfume-kit.jpg",
-      "/perfume-close-up.jpg",
-      "/perfume-unboxing.jpg",
-      "/perfume-lifestyle.jpg"
-    ]
-  }
-]
-
-export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: (selectedKit: string) => void }) {
+export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: () => void }) {
   const [carouselOffset, setCarouselOffset] = useState(0)
   
-  const selectedKitData = kits[0]
-
   // Auto-scroll carousel
   useEffect(() => {
     const interval = setInterval(() => {
@@ -148,7 +108,7 @@ export default function PriceAnchoring({ onBuyClick }: { onBuyClick?: (selectedK
         {onBuyClick && (
           <div className="mt-6">
             <button
-              onClick={() => onBuyClick(selectedKitData.id)}
+              onClick={() => onBuyClick()}
               className="w-full bg-[#2ed418] hover:bg-[#33ff00] shadow-xl shadow-gray-500/35 hover:shadow-green-200 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2"
             >
               Jetzt kaufen – Holen Sie sich dieses Parfüm-Set

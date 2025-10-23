@@ -7,12 +7,11 @@ import Link from 'next/link';
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { getProductByHandle, getRelatedProducts, formatPrice, Product } from '../../../utils/products';
-import { useParallax } from '@/hooks/useParallax';
 import { useCart } from '@/contexts/CartContext';
 import { findVariantByHandle } from '@/utils/shopifyVariants';
 import '@/styles/product-parallax.css';
 
-// Dados fake de comentários
+// Fake comments data
 const fakeReviews = [
   {
     id: 1,
@@ -51,7 +50,7 @@ const fakeReviews = [
   }
 ];
 
-// Calcular rating médio
+// Calculate average rating
 const averageRating = fakeReviews.reduce((sum, review) => sum + review.rating, 0) / fakeReviews.length;
 const totalReviews = fakeReviews.length;
 
@@ -63,18 +62,16 @@ export default function ProductPage() {
   const [selectedImage, setSelectedImage] = useState<string>('')
   const [product, setProduct] = useState<Product | null>(null)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isReviewsOpen, setIsReviewsOpen] = useState(false)
-  const { scrollY, isScrolling, hasReachedPhotoLimit, photoLimit } = useParallax()
 
-  // Função para adicionar produto ao carrinho
+  // Add product to cart function
   const handleAddToCart = async () => {
     if (!product || !handle) return;
     
     const shopifyVariant = await findVariantByHandle(handle);
     if (!shopifyVariant) {
-      console.error('Produto não encontrado no Shopify:', handle);
+      console.error('Produkt nicht im Shopify gefunden:', handle);
       return;
     }
     
@@ -88,21 +85,21 @@ export default function ProductPage() {
     });
   };
 
-  // Função para calcular o prazo de entrega dinâmico
+  // Calculate dynamic delivery timeframe function
   const getDeliveryTimeframe = () => {
     const today = new Date();
     const startDate = new Date(today);
     const endDate = new Date(today);
     
-    // Adiciona 3 dias para data inicial
+    // Add 3 days for start date
     startDate.setDate(today.getDate() + 3);
-    // Adiciona 10 dias para data final
+    // Add 10 days for end date
     endDate.setDate(today.getDate() + 10);
     
-    // Nomes dos dias da semana em alemão
+    // German weekday names
     const weekdays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
     
-    // Formatar as datas
+    // Format dates
     const formatDate = (date: Date) => {
       const day = weekdays[date.getDay()];
       const dayNum = date.getDate().toString().padStart(2, '0');
@@ -121,7 +118,7 @@ export default function ProductPage() {
         setProduct(productData);
         setSelectedImage(productData.images[0] || '');
         
-        // Carregar produtos relacionados
+        // Load related products
         const related = getRelatedProducts(handle, 4);
         setRelatedProducts(related);
       }
@@ -139,10 +136,10 @@ export default function ProductPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h1 className="text-xl font-medium text-gray-900 mb-2">Produto não encontrado</h1>
-            <p className="text-gray-500 mb-6">O produto que você está procurando não existe ou foi removido.</p>
+            <h1 className="text-xl font-medium text-gray-900 mb-2">Produkt nicht gefunden</h1>
+            <p className="text-gray-500 mb-6">Das gesuchte Produkt existiert nicht oder wurde entfernt.</p>
             <Link href="/products" className="inline-block bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors">
-              Ver todos os produtos
+              Alle Produkte anzeigen
             </Link>
           </div>
         </div>
@@ -153,7 +150,7 @@ export default function ProductPage() {
   
   return (
     <div className="parallax-container">
-      {/* Seção da foto com header e breadcrumb integrados */}
+      {/* Foto-Sektion mit integriertem Header und Breadcrumb */}
       <section className="photo-section">
         {/* Header integrado na foto */}
         <div className="header-overlay">
@@ -165,11 +162,11 @@ export default function ProductPage() {
           <div className="container mx-auto px-4">
             <nav className="flex items-center space-x-2 text-sm">
               <Link href="/" className="text-white/80 hover:text-white transition-colors">
-                Início
+                Startseite
               </Link>
               <span className="text-white/60">/</span>
               <Link href="/products" className="text-white/80 hover:text-white transition-colors">
-                Produtos
+                Produkte
               </Link>
               <span className="text-white/60">/</span>
               <span className="text-white font-medium">{product.title}</span>
@@ -224,7 +221,7 @@ export default function ProductPage() {
         </div>
       </section>
 
-      {/* Seção de conteúdo - Novo Layout */}
+      {/* Inhalts-Sektion - Neues Layout */}
       <section className="product-content-section">
         <div data-testid="product-info" className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div data-testid="grid" className="product-cockpit">
@@ -301,7 +298,7 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Informações de Entrega */}
+            {/* Lieferinformationen */}
             <div className="product-delivery-info mb-6" data-testid="product-delivery-info">
               <div className="availability-container">
                 <div className="availability-info-container mb-4" data-testid="online-availability">
@@ -351,7 +348,7 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Seção de Informações do Produto */}
+            {/* Produktinformations-Sektion */}
             <div className="mb-6 mx-4 sm:mx-6 lg:mx-8" style={{ fontFamily: 'Avenir Next, -apple-system, BlinkMacSystemFont, sans-serif' }}>
               <div className="e557dfab53c773eec7d4" data-testid="product-information">
                 <span className="aa6395229546fac01bf6 text-lg font-medium mb-4 block">Produktinformationen</span>

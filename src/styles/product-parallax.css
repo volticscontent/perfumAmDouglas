@@ -9,6 +9,8 @@ html {
 .parallax-container {
   position: relative;
   min-height: 100vh;
+  margin-top: 0;
+  padding-top: 0;
 }
 /* Header integrado na foto */
 .header-overlay {

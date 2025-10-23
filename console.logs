@@ -1,0 +1,243 @@
+Error: <path> attribute d: Expected number, "…6872 4.67691 12 = 6.12744Z".Understand this error
+Header.tsx:108 Error: <path> attribute d: Expected number, "…6872 4.67691 12 = 6.12744Z".
+setValueForAttribute @ react-dom-client.development.js:1541
+setProp @ react-dom-client.development.js:18242
+setInitialProperties @ react-dom-client.development.js:18607
+completeWork @ react-dom-client.development.js:11743
+runWithFiberInDEV @ react-dom-client.development.js:871
+completeUnitOfWork @ react-dom-client.development.js:15862
+performUnitOfWork @ react-dom-client.development.js:15743
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+<path>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
+Header @ Header.tsx:108
+react_stack_bottom_frame @ react-dom-client.development.js:23583
+renderWithHooksAgain @ react-dom-client.development.js:6892
+renderWithHooks @ react-dom-client.development.js:6804
+updateFunctionComponent @ react-dom-client.development.js:9246
+beginWork @ react-dom-client.development.js:10857
+runWithFiberInDEV @ react-dom-client.development.js:871
+performUnitOfWork @ react-dom-client.development.js:15726
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+<Header>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
+ProductPage @ src_1bce2a4f._.js:2189
+react_stack_bottom_frame @ react-dom-client.development.js:23583
+renderWithHooksAgain @ react-dom-client.development.js:6892
+renderWithHooks @ react-dom-client.development.js:6804
+updateFunctionComponent @ react-dom-client.development.js:9246
+beginWork @ react-dom-client.development.js:10857
+runWithFiberInDEV @ react-dom-client.development.js:871
+performUnitOfWork @ react-dom-client.development.js:15726
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+<ProductPage>
+exports.jsx @ react-jsx-runtime.development.js:323
+ClientPageRoot @ client-page.tsx:60
+react_stack_bottom_frame @ react-dom-client.development.js:23583
+renderWithHooksAgain @ react-dom-client.development.js:6892
+renderWithHooks @ react-dom-client.development.js:6804
+updateFunctionComponent @ react-dom-client.development.js:9246
+beginWork @ react-dom-client.development.js:10806
+runWithFiberInDEV @ react-dom-client.development.js:871
+performUnitOfWork @ react-dom-client.development.js:15726
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM4129 <anonymous>:1
+Function.all @ VM4129 <anonymous>:1
+Function.all @ VM4129 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1332
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2030
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:3083
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:3460
+__TURBOPACK__module__evaluation__ @ app-index.tsx:156
+(anonymous) @ dev-base.ts:241
+runModuleExecutionHooks @ dev-base.ts:275
+instantiateModule @ dev-base.ts:235
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:366
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:76
+loadScriptsInSequence @ app-bootstrap.ts:22
+appBootstrap @ app-bootstrap.ts:58
+__TURBOPACK__module__evaluation__ @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:241
+runModuleExecutionHooks @ dev-base.ts:275
+instantiateModule @ dev-base.ts:235
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1146
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126Understand this error
+3-piece-premium-fragrance-collection-set-29:1 Access to fetch at 'http://localhost:3001/tracking/v1/events' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+pixel.js:1  POST http://localhost:3001/tracking/v1/events net::ERR_FAILED
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+event @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+track @ pixel.js:1
+(anonymous) @ pixel.js:1
+r @ pixel.js:1
+Promise.then
+s @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+init @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1Understand this error
+pixel.js:1   Uncaught (in promise) TypeError: Failed to fetch
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+event @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+track @ pixel.js:1
+(anonymous) @ pixel.js:1
+r @ pixel.js:1
+Promise.then
+s @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+init @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1Understand this error
+Header.tsx:108 Error: <path> attribute d: Expected number, "…6872 4.67691 12 = 6.12744Z".
+setValueForAttribute @ react-dom-client.development.js:1541
+setProp @ react-dom-client.development.js:18242
+setInitialProperties @ react-dom-client.development.js:18607
+completeWork @ react-dom-client.development.js:11743
+runWithFiberInDEV @ react-dom-client.development.js:871
+completeUnitOfWork @ react-dom-client.development.js:15862
+performUnitOfWork @ react-dom-client.development.js:15743
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+<path>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
+Header @ Header.tsx:108
+react_stack_bottom_frame @ react-dom-client.development.js:23583
+renderWithHooksAgain @ react-dom-client.development.js:6892
+renderWithHooks @ react-dom-client.development.js:6804
+updateFunctionComponent @ react-dom-client.development.js:9246
+beginWork @ react-dom-client.development.js:10857
+runWithFiberInDEV @ react-dom-client.development.js:871
+performUnitOfWork @ react-dom-client.development.js:15726
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+<Header>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:323
+ProductPage @ src_1bce2a4f._.js:2189
+react_stack_bottom_frame @ react-dom-client.development.js:23583
+renderWithHooksAgain @ react-dom-client.development.js:6892
+renderWithHooks @ react-dom-client.development.js:6804
+updateFunctionComponent @ react-dom-client.development.js:9246
+beginWork @ react-dom-client.development.js:10857
+runWithFiberInDEV @ react-dom-client.development.js:871
+performUnitOfWork @ react-dom-client.development.js:15726
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+<ProductPage>
+exports.jsx @ react-jsx-runtime.development.js:323
+ClientPageRoot @ client-page.tsx:60
+react_stack_bottom_frame @ react-dom-client.development.js:23583
+renderWithHooksAgain @ react-dom-client.development.js:6892
+renderWithHooks @ react-dom-client.development.js:6804
+updateFunctionComponent @ react-dom-client.development.js:9246
+beginWork @ react-dom-client.development.js:10806
+runWithFiberInDEV @ react-dom-client.development.js:871
+performUnitOfWork @ react-dom-client.development.js:15726
+workLoopConcurrentByScheduler @ react-dom-client.development.js:15720
+renderRootConcurrent @ react-dom-client.development.js:15695
+performWorkOnRoot @ react-dom-client.development.js:14989
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:16815
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM4129 <anonymous>:1
+Function.all @ VM4129 <anonymous>:1
+Function.all @ VM4129 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1332
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2030
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:3083
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:3460
+__TURBOPACK__module__evaluation__ @ app-index.tsx:156
+(anonymous) @ dev-base.ts:241
+runModuleExecutionHooks @ dev-base.ts:275
+instantiateModule @ dev-base.ts:235
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:366
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:76
+loadScriptsInSequence @ app-bootstrap.ts:22
+appBootstrap @ app-bootstrap.ts:58
+__TURBOPACK__module__evaluation__ @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:241
+runModuleExecutionHooks @ dev-base.ts:275
+instantiateModule @ dev-base.ts:235
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1146
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126Understand this error
+3-piece-premium-fragrance-collection-set-29:1 Access to fetch at 'http://localhost:3001/tracking/v1/events' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+pixel.js:1  POST http://localhost:3001/tracking/v1/events net::ERR_FAILED
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+event @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+track @ pixel.js:1
+(anonymous) @ pixel.js:1
+r @ pixel.js:1
+Promise.then
+s @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+trackByTime @ pixel.js:1
+init @ pixel.js:1
+(anonymous) @ pixel.js:1
+r @ pixel.js:1
+Promise.then
+s @ pixel.js:1
+(anonymous) @ pixel.js:1
+l @ pixel.js:1
+init @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1
+(anonymous) @ pixel.js:1Understand this error
+pixel.js:1   Uncaught (in promise) TypeError: Failed to fetch

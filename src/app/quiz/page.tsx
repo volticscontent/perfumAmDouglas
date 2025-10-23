@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "../../components/button"
 import { RadioGroup, RadioGroupItem } from "../../components/radio-group"
 import { Label } from "../../components/label"
@@ -8,8 +9,8 @@ import { Trophy, DollarSign } from "lucide-react"
 import PriceAnchoring from "../../components/PriceAnchoring"
 import QuizHeader from "../../components/QuizHeader"
 import Footer from "../../components/Footer"
-import { trackQuizStep, trackQuizCompletion, useTikTokClickIdCapture } from "../../utils/tracking"
-import styles from "../../styles/animations.module.css"
+import { trackQuizStep, trackQuizCompletion } from "../../utils/tracking"
+import { useUTM } from "../../contexts/UTMContext"
 import "../../styles/quiz-progress.css"
 
 // Declare tipos globais para os pixels
@@ -159,65 +160,13 @@ const SuccessNotification = ({ show, onClose }: { show: boolean; onClose: () => 
   )
 }
 
-// Remove unused FallingHeart component (lines 272-283)
-
-// Remove unused ChelseaLionIcon component (lines 286-294)
-
-// Carrossel de imagens para substituir o VSL - COMENTADO
-/*
-const ImageCarousel = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = ["/per1.png", "/per2.png", "/per3.png", "/per4.png", "/per5.png", "/per6.png", "/per7.png", "/per8.png", "/per9.png", "/per10.png", "/per.png"]]];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="relative w-full" style={{ paddingBottom: '75%' }}>
-      <div className="absolute inset-0 rounded-xl overflow-hidden">
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            src={image}
-            alt={`WWE SummerSlam Image ${index + 1}`}
-            fill
-            className={`object-cover transition-opacity duration-1000 ${
-              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ borderRadius: '25px' }}
-          />
-        ))}
-      </div>
-      
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentImageIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentImageIndex 
-                ? 'bg-white shadow-lg' 
-                : 'bg-white/50 hover:bg-white/75'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-*/
-
 // Componente de vídeo simplificado
 const VideoPlayer = React.memo(() => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [showMuteButton, setShowMuteButton] = useState(true);
   const [videoError, setVideoError] = useState(false);
+  const { trackQuizVSLViewed } = useUTM();
 
   useEffect(() => {
     const video = videoRef.current;
@@ -241,18 +190,25 @@ const VideoPlayer = React.memo(() => {
       setVideoError(true);
     };
 
+    const handleVideoEnded = () => {
+      // Tracking customizado quando VSL termina
+      trackQuizVSLViewed();
+    };
+
     forcePlay();
     video.addEventListener('canplay', forcePlay);
     video.addEventListener('loadeddata', forcePlay);
     video.addEventListener('error', handleError);
+    video.addEventListener('ended', handleVideoEnded);
     setTimeout(forcePlay, 1000);
 
     return () => {
       video.removeEventListener('canplay', forcePlay);
       video.removeEventListener('loadeddata', forcePlay);
       video.removeEventListener('error', handleError);
+      video.removeEventListener('ended', handleVideoEnded);
     };
-  }, []);
+  }, [trackQuizVSLViewed]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -359,56 +315,6 @@ const VideoPlayer = React.memo(() => {
 
 VideoPlayer.displayName = 'VideoPlayer';
 
-// Componente de Layout para os scripts simplificado - removido pois já está no layout global
-// const PixelScripts = () => (
-//   <>
-//   </>
-// );
-
-// Hook para controlar o carregamento dos pixels - simplificado
-const usePixelLoader = () => {
-  const [isPixelsReady, setPixelsReady] = useState(false);
-  const pixelsInitialized = useRef(false);
-
-  useEffect(() => {
-    if (pixelsInitialized.current) {
-      setPixelsReady(true);
-      return;
-    }
-
-    // Verifica se o Facebook pixel está carregado (carregado no layout global)
-    const checkPixels = () => {
-      return window.fbq; // Removido window.ttq pois TikTok pixel não está sendo carregado
-    };
-
-    // Função que verifica os pixels
-    const checkAll = () => {
-      if (checkPixels()) {
-        setPixelsReady(true);
-        pixelsInitialized.current = true;
-        clearInterval(checkInterval);
-      }
-    };
-
-    // Inicia verificação periódica
-    const checkInterval = setInterval(checkAll, 500);
-
-    // Timeout de segurança após 3 segundos (reduzido pois só verifica Facebook pixel)
-    const timeoutId = setTimeout(() => {
-      setPixelsReady(true);
-      pixelsInitialized.current = true;
-      clearInterval(checkInterval);
-    }, 3000);
-
-    return () => {
-      clearInterval(checkInterval);
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  return isPixelsReady;
-};
-
 // Rastrear visualização da VSL apenas uma vez globalmente
 const useTrackVSLView = () => {
   useEffect(() => {
@@ -419,11 +325,6 @@ const useTrackVSLView = () => {
 };
 
 // Hook personalizado para gerenciar elementos escondidos (não é mais necessário)
-function useDelayedElements() {
-  // O delay agora é controlado pelo VTurb
-  return null;
-}
-
 const useAudioSystem = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -566,7 +467,7 @@ const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 
 // Componente DiscountProgressBar corrigido
-const DiscountProgressBar = ({ correctAnswers, answeredQuestions }: { correctAnswers: number; answeredQuestions: number }) => {
+const DiscountProgressBar = ({ answeredQuestions }: { answeredQuestions: number }) => {
   const discountPerAnswer = 20; // €20 por resposta
   const maxDiscount = questions.length * discountPerAnswer; // €120 máximo (6 × 20)
   
@@ -641,6 +542,19 @@ export default function WWESummerSlamQuiz() {
   const [showUSPPanel, setShowUSPPanel] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
 
+  // Hook do contexto UTM para tracking
+  const { 
+    trackQuizStarted,
+    trackQuizQuestion,
+    trackQuizResultViewed,
+    trackQuizRedirectToStore,
+    trackQuizRedirectToStoreSuccessful,
+    utmData
+  } = useUTM();
+
+  // Hook do router para navegação interna
+  const router = useRouter();
+
   // Estilos CSS agora são importados via arquivo separado
 
   // Hook de captura do ttclid removido para evitar loops infinitos
@@ -686,6 +600,8 @@ export default function WWESummerSlamQuiz() {
 
     // Tracking da resposta
     trackQuizStep(`question_${currentQuestion + 1}`, { answer: answerToUse });
+    // Tracking customizado para cada pergunta
+    trackQuizQuestion(currentQuestion + 1, answerToUse);
 
     setTimeout(() => {
       if (currentQuestion < questions.length - 1) {
@@ -700,10 +616,12 @@ export default function WWESummerSlamQuiz() {
           score: correctAnswers + (isCorrect ? 1 : 0),
           timeTaken: timeTaken
         });
+        // Tracking customizado para visualização do resultado
+        trackQuizResultViewed();
       }
       setIsSubmitting(false)
     }, 1500)
-  }, [isSubmitting, currentQuestion, selectedAnswer, correctAnswers, startTime, playSound]);
+  }, [isSubmitting, currentQuestion, selectedAnswer, correctAnswers, startTime, playSound, trackQuizQuestion, trackQuizResultViewed]);
 
   // Remover o useEffect que adiciona os estilos - corrigido
   useEffect(() => {
@@ -768,6 +686,7 @@ export default function WWESummerSlamQuiz() {
   const handleStartQuiz = () => {
     setIsLoading(true)
     trackQuizStep('quiz_start'); // Rastrear início do quiz
+    trackQuizStarted(); // Tracking customizado Quiz_Started
     
     // Simular um pequeno delay para melhor UX
     setTimeout(() => {
@@ -780,54 +699,37 @@ export default function WWESummerSlamQuiz() {
   }
 
   // Função para lidar com o clique no botão de compra
-  const handleBuyNowClick = (selectedKit: string) => {
+  const handleBuyNowClick = () => {
     trackQuizStep('go_to_store'); // Evento final - ir para a loja
+    trackQuizRedirectToStore(); // Tracking customizado Quiz_RedirectToStore
     
-    // Links dos produtos baseados no kit selecionado
-    const productLinks = {
-      "john-cena": "http://store.douglasparfum.shop/",
-    };
+    // Construir URL com UTMs diretamente
+    let url = "/";
     
-    const url = productLinks[selectedKit as keyof typeof productLinks] || productLinks["john-cena"];
-    const newWindow = window.open(url, "_blank");
-    if (newWindow) newWindow.opener = null;
+    // Adicionar UTMs se disponíveis
+    if (utmData) {
+      const params = new URLSearchParams();
+      
+      if (utmData.utm_source) params.append('utm_source', utmData.utm_source);
+      if (utmData.utm_medium) params.append('utm_medium', utmData.utm_medium);
+      if (utmData.utm_campaign) params.append('utm_campaign', utmData.utm_campaign);
+      if (utmData.utm_content) params.append('utm_content', utmData.utm_content);
+      if (utmData.utm_term) params.append('utm_term', utmData.utm_term);
+      if (utmData.gclid) params.append('gclid', utmData.gclid);
+      if (utmData.fbclid) params.append('fbclid', utmData.fbclid);
+      if (utmData.ttclid) params.append('ttclid', utmData.ttclid);
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+    }
+    
+    // Usar navegação interna do Next.js em vez de abrir nova janela
+    router.push(url);
+    
+    // Tracking de sucesso no redirecionamento
+    trackQuizRedirectToStoreSuccessful();
   }
-
-  // Modificar nextQuestion com loading
-  // const nextQuestion = () => {
-  //   setIsLoading(true)
-  //   
-  //   setTimeout(() => {
-  //     if (currentQuestion < questions.length - 1) {
-  //       setCurrentQuestion((prev) => prev + 1)
-  //       setSelectedAnswer("")
-  //     } else {
-  //       setQuizCompleted(true)
-  //       trackQuizCompletion({ 
-  //         totalQuestions: questions.length, 
-  //         correctAnswers: correctAnswers,
-  //         completionTime: Date.now() - startTime
-  //       }); // Rastrear conclusão do quiz
-  //     }
-  //     setIsLoading(false)
-  //   }, 400)
-  // }
-
-  // const handleRestart = () => {
-  //   trackQuizStep('quiz_restart'); // Rastrear reinício do quiz
-  //   setGameStarted(false);
-  //   setCurrentQuestion(0);
-  //   setSelectedAnswer("");
-  //   setCorrectAnswers(0);
-  //   setQuizCompleted(false);
-  //   setShowNotification(false);
-  //   // Scroll automático para o topo ao reiniciar quiz
-  //   window.scrollTo({ top: 0, behavior: 'smooth' });
-  // };
-
-  const discount = correctAnswers * 20
-  const originalPrice = 147.0
-  // const finalPrice = Math.max(originalPrice - discount, 47.0)
 
   useTrackVSLView(); // Comentado junto com o VSL
 
@@ -903,7 +805,7 @@ export default function WWESummerSlamQuiz() {
 
               <div className="flex flex-col gap-4">
                 {/* Discount progress bar */}
-                <DiscountProgressBar correctAnswers={correctAnswers} answeredQuestions={answeredQuestions} />
+                <DiscountProgressBar answeredQuestions={answeredQuestions} />
                 
               </div>
             </div>
@@ -992,7 +894,7 @@ export default function WWESummerSlamQuiz() {
                 </Button>
 
                 {/* Discount progress bar instead of quiz progress */}
-                <DiscountProgressBar correctAnswers={correctAnswers} answeredQuestions={answeredQuestions} />
+                <DiscountProgressBar answeredQuestions={answeredQuestions} />
               </div>
             </div>
           </div>

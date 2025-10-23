@@ -27,18 +27,21 @@ export const findVariantByHandle = async (handle: string): Promise<ShopifyVarian
 // Função para obter URL do produto no Shopify
 export const getShopifyProductUrl = async (handle: string): Promise<string> => {
   const variant = await findVariantByHandle(handle);
-  return variant ? `https://perfume-alemanha.myshopify.com/products/${handle}` : '';
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'cc1ve6-49.myshopify.com';
+  return variant ? `https://${domain}/products/${handle}` : '';
 };
 
 // Função para obter URL de checkout direto
 export const getShopifyCheckoutUrl = async (variantId: number, quantity: number = 1): Promise<string> => {
-  return `https://perfume-alemanha.myshopify.com/cart/${variantId}:${quantity}`;
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'cc1ve6-49.myshopify.com';
+  return `https://${domain}/cart/${variantId}:${quantity}`;
 };
 
 // Função para checkout com múltiplos produtos
 export const getShopifyMultiCheckoutUrl = (items: { variantId: number; quantity: number }[]): string => {
+  const domain = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN || 'cc1ve6-49.myshopify.com';
   const cartItems = items.map(item => `${item.variantId}:${item.quantity}`).join(',');
-  return `https://perfume-alemanha.myshopify.com/cart/${cartItems}`;
+  return `https://${domain}/cart/${cartItems}`;
 };
 
 // Verifica se um produto existe no Shopify

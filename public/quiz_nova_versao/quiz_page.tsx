@@ -5,12 +5,10 @@ import { Button } from "./button"
 import { RadioGroup, RadioGroupItem } from "./radio-group"
 import { Label } from "./label"
 import { Trophy, DollarSign } from "lucide-react"
-import Image from "next/image"
 import PriceAnchoring from "../../src/components/PriceAnchoring"
 import QuizHeader from "../../src/components/QuizHeader"
 import Footer from "../../src/components/Footer"
-import { trackQuizStep, useTikTokClickIdCapture } from "./tracking"
-import styles from "./animations.module.css"
+import { trackQuizStep } from "./tracking"
 
 // Add animated border keyframes for progress
 const progressBarStyles = `
@@ -268,33 +266,6 @@ const SuccessNotification = ({ show, onClose }: { show: boolean; onClose: () => 
   )
 }
 
-// Falling hearts component
-const FallingHeart = ({ delay }: { delay: number }) => (
-  <div 
-    className={`absolute text-red-500 text-2xl pointer-events-none ${styles.fall}`}
-    style={{
-      left: `${Math.random() * 100}%`,
-      top: '-50px',
-      animationDelay: `${delay}ms`
-    }}
-  >
-    ❤️
-  </div>
-)
-
-// Chelsea lion icon component
-const ChelseaLionIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    className="w-8 h-8"
-    fill="currentColor"
-  >
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-  </svg>
-);
-
-
-
 // Loading component for better UX
 const LoadingSpinner = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
   const sizeClasses = {
@@ -308,57 +279,8 @@ const LoadingSpinner = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
   )
 }
 
-// Carrossel de imagens para substituir o VSL - COMENTADO
-/*
-const ImageCarousel = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = ["/per1.png", "/per2.png", "/per3.png", "/per4.png", "/per5.png", "/per6.png", "/per7.png", "/per8.png", "/per9.png", "/per10.png", "/per.png"]]];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="relative w-full" style={{ paddingBottom: '75%' }}>
-      <div className="absolute inset-0 rounded-xl overflow-hidden">
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            src={image}
-            alt={`WWE SummerSlam Image ${index + 1}`}
-            fill
-            className={`object-cover transition-opacity duration-1000 ${
-              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ borderRadius: '25px' }}
-          />
-        ))}
-      </div>
-      
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentImageIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentImageIndex 
-                ? 'bg-white shadow-lg' 
-                : 'bg-white/50 hover:bg-white/75'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-*/
-
 // Componente de vídeo simplificado
-const VideoPlayer = React.memo(({ isReady }: { isReady: boolean }) => {
+const VideoPlayer = React.memo(() => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [showMuteButton, setShowMuteButton] = useState(true);
@@ -504,56 +426,6 @@ const VideoPlayer = React.memo(({ isReady }: { isReady: boolean }) => {
 
 VideoPlayer.displayName = 'VideoPlayer';
 
-// Componente de Layout para os scripts simplificado - removido pois já está no layout global
-// const PixelScripts = () => (
-//   <>
-//   </>
-// );
-
-// Hook para controlar o carregamento dos pixels - simplificado
-const usePixelLoader = () => {
-  const [isPixelsReady, setPixelsReady] = useState(false);
-  const pixelsInitialized = useRef(false);
-
-  useEffect(() => {
-    if (pixelsInitialized.current) {
-      setPixelsReady(true);
-      return;
-    }
-
-    // Verifica se o Facebook pixel está carregado (carregado no layout global)
-    const checkPixels = () => {
-      return window.fbq; // Removido window.ttq pois TikTok pixel não está sendo carregado
-    };
-
-    // Função que verifica os pixels
-    const checkAll = () => {
-      if (checkPixels()) {
-        setPixelsReady(true);
-        pixelsInitialized.current = true;
-        clearInterval(checkInterval);
-      }
-    };
-
-    // Inicia verificação periódica
-    const checkInterval = setInterval(checkAll, 500);
-
-    // Timeout de segurança após 3 segundos (reduzido pois só verifica Facebook pixel)
-    const timeoutId = setTimeout(() => {
-      setPixelsReady(true);
-      pixelsInitialized.current = true;
-      clearInterval(checkInterval);
-    }, 3000);
-
-    return () => {
-      clearInterval(checkInterval);
-      clearTimeout(timeoutId);
-    };
-  }, []);
-
-  return isPixelsReady;
-};
-
 // Rastrear visualização da VSL apenas uma vez globalmente
 const useTrackVSLView = () => {
   useEffect(() => {
@@ -562,12 +434,6 @@ const useTrackVSLView = () => {
     }, 1000);
   }, []);
 };
-
-// Hook personalizado para gerenciar elementos escondidos (não é mais necessário)
-function useDelayedElements() {
-  // O delay agora é controlado pelo VTurb
-  return null;
-}
 
 const useAudioSystem = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -706,55 +572,8 @@ const USPPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 
 
-// Componente do ícone de coração moderno
-const HeartIcon = ({ isLiked, onClick }: { isLiked: boolean; onClick: () => void }) => {
-  const [showBurst, setShowBurst] = useState(false);
-  
-  const handleClick = () => {
-    onClick();
-    if (!isLiked) {
-      setShowBurst(true);
-      setTimeout(() => setShowBurst(false), 700);
-    }
-  };
-
-  return (
-    <div className="relative">
-      {showBurst && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className={`absolute w-full h-full ${styles.heartBurst}`}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-red-500 rounded-full"
-                style={{
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 60}deg) translateY(-10px)`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-      
-    </div>
-  );
-};
-
-// Componente do ícone do Trustpilot
-const TrustpilotStars = () => (
-  <div className="flex items-center space-x-1">
-    {[1, 2, 3, 4, 5].map((star) => (
-      <svg key={star} className="w-4 h-4 text-[#00b67a]" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-      </svg>
-    ))}
-  </div>
-);
-
 // Usar o QuizHeader simplificado
-const CompleteHeader = ({ onUSPClick }: { onUSPClick: () => void }) => {
+const CompleteHeader = () => {
   return <QuizHeader />;
 };
 
@@ -784,10 +603,73 @@ export default function WWESummerSlamQuiz() {
   // Hook de captura do ttclid removido para evitar loops infinitos
   // useTikTokClickIdCapture();
 
-  const isPixelsReady = usePixelLoader()
-  const { playSound, isInitialized: audioInitialized } = useAudioSystem();
+  const { playSound } = useAudioSystem();
   const [progressValue, setProgressValue] = useState(100);
   const progressTimer = useRef<NodeJS.Timeout | null>(null);
+
+  // Modificar a função de resposta com loading e scroll automático
+  const handleAnswer = useCallback(() => {
+    if (isSubmitting) return
+    
+    // Verificar se temos uma pergunta válida
+    if (currentQuestion < 0 || currentQuestion >= questions.length) {
+      console.error('Current question index out of bounds:', currentQuestion, 'Total questions:', questions.length);
+      return;
+    }
+    
+    const currentQuestionData = questions[currentQuestion];
+    if (!currentQuestionData) {
+      console.error('Pergunta atual não encontrada');
+      return;
+    }
+    
+    // Verificar se uma resposta foi selecionada
+    if (selectedAnswer === '' || selectedAnswer === null) {
+      console.warn('No answer selected, skipping...');
+      // Para auto-advance, não retorna, continua com resposta vazia
+    }
+    
+    setIsSubmitting(true)
+    
+    // Rastrear resposta da pergunta
+    trackQuizStep('question_answered', { 
+      questionNumber: currentQuestion + 1,
+      answer: selectedAnswer || 'no_answer',
+      isCorrect: selectedAnswer === currentQuestionData.options[currentQuestionData.correct]
+    });
+    
+    // Verificar se a resposta está correta
+    const isCorrect = selectedAnswer === currentQuestionData.options[currentQuestionData.correct];
+    if (isCorrect) {
+      setCorrectAnswers(prev => prev + 1);
+      playSound(); // Tocar som apenas para respostas corretas
+    }
+    
+    // Simular um pequeno delay para melhor UX
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(prev => prev + 1)
+        setSelectedAnswer("")
+        setIsSubmitting(false)
+        // Scroll automático para o topo ao avançar pergunta
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Quiz completo
+        setQuizCompleted(true)
+        setIsSubmitting(false)
+        setShowNotification(true)
+        
+        // Rastrear conclusão do quiz
+        trackQuizStep('quiz_completed', { 
+          totalCorrect: correctAnswers + (isCorrect ? 1 : 0),
+          totalQuestions: questions.length 
+        });
+        
+        // Scroll automático para o topo ao completar quiz
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 600)
+  }, [currentQuestion, selectedAnswer, isSubmitting, correctAnswers, playSound]);
 
   // Remover o useEffect que adiciona os estilos
   useEffect(() => {
@@ -817,7 +699,7 @@ export default function WWESummerSlamQuiz() {
         clearInterval(progressTimer.current);
       }
     };
-  }, [gameStarted, currentQuestion, quizCompleted]);
+  }, [gameStarted, currentQuestion, quizCompleted, handleAnswer]);
 
   // Reset progress quando mudar de pergunta
   useEffect(() => {
@@ -834,14 +716,9 @@ export default function WWESummerSlamQuiz() {
     console.log('showUSPPanel state changed:', showUSPPanel)
   }, [showUSPPanel])
 
-  // Usar o hook de delay
-  const delayedElements = useDelayedElements()
+  // Usar o hook de delay (removido - não utilizado)
 
-  // Função para abrir o painel USP
-  const handleUSPClick = () => {
-    console.log('handleUSPClick called')
-    setShowUSPPanel(true)
-  }
+
 
   // Função para fechar o painel USP
   const handleUSPClose = () => {
@@ -864,107 +741,38 @@ export default function WWESummerSlamQuiz() {
   }
 
   // Função para lidar com o clique no botão de compra
-  const handleBuyNowClick = (selectedKit: string) => {
+  const handleBuyNowClick = () => {
     trackQuizStep('go_to_store'); // Evento final - ir para a loja
     
-    // Links dos produtos baseados no kit selecionado
-    const productLinks = {
-      "john-cena": "http://localhost:3000/",
-    };
+    // Construir URL com UTMs diretamente da URL atual
+    let url = "/";
     
-    const url = productLinks[selectedKit as keyof typeof productLinks] || productLinks["john-cena"];
+    // Capturar UTMs da URL atual
+    const currentUrl = new URL(window.location.href);
+    const params = new URLSearchParams();
+    
+    // Adicionar UTMs se existirem na URL atual
+    const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'ttclid'];
+    utmParams.forEach(param => {
+      const value = currentUrl.searchParams.get(param);
+      if (value) {
+        params.append(param, value);
+      }
+    });
+    
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+    
     const newWindow = window.open(url, "_blank");
     if (newWindow) newWindow.opener = null;
   }
 
-  // Modificar a função de resposta com loading e scroll automático
-  const handleAnswer = () => {
-    if (isSubmitting) return
-    
-    // Verificar se temos uma pergunta válida
-    if (currentQuestion < 0 || currentQuestion >= questions.length) {
-      console.error('Current question index out of bounds:', currentQuestion, 'Total questions:', questions.length);
-      return;
-    }
-    
-    const currentQuestionData = questions[currentQuestion];
-    if (!currentQuestionData) {
-      console.error('Pergunta atual não encontrada');
-      return;
-    }
-    
-    // Verificar se uma resposta foi selecionada
-    if (selectedAnswer === '' || selectedAnswer === null) {
-      console.warn('No answer selected, skipping...');
-      return;
-    }
-    
-    setIsSubmitting(true)
-    const isCorrect = Number.parseInt(selectedAnswer) === currentQuestionData.correct
-    const questionNumber = currentQuestion + 1
 
-    // Sempre incrementar o contador, independente da resposta estar correta
-    setCorrectAnswers(prev => {
-      const newValue = prev + 1;
-      console.log('Discount updated:', newValue);
-      return newValue;
-    });
 
-    // Tracking de eventos - rastrear cada pergunta
-    trackQuizStep('question_answered', { questionNumber, isCorrect });
-    
-    // Sempre mostrar a notificação
-    setShowNotification(true);
-    playSound();
 
-    // Avançar diretamente para a próxima pergunta ou finalizar o quiz
-    setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion((prev) => prev + 1)
-        setSelectedAnswer("")
-        // Scroll automático para o topo ao avançar pergunta
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        setQuizCompleted(true)
-        trackQuizStep('quiz_completed'); // Rastrear conclusão do quiz
-        // Scroll automático para o topo ao completar quiz
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      setIsSubmitting(false)
-    }, 600)
-  }
 
-  // Modificar nextQuestion com loading
-  const nextQuestion = () => {
-    setIsLoading(true)
-    
-    setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion((prev) => prev + 1)
-        setSelectedAnswer("")
-      } else {
-        setQuizCompleted(true)
-        trackQuizStep('quiz_completed'); // Rastrear conclusão do quiz
-      }
-      setIsLoading(false)
-    }, 400)
-  }
 
-  const handleRestart = () => {
-    trackQuizStep('quiz_restart'); // Rastrear reinício do quiz
-    setGameStarted(false);
-    setCurrentQuestion(0);
-    setSelectedAnswer("");
-    setCorrectAnswers(0);
-    setQuizCompleted(false);
-    setShowNotification(false);
-    // Scroll automático para o topo ao reiniciar quiz
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const discount = correctAnswers * 20
-  const originalPrice = 147.0
-  const finalPrice = Math.max(originalPrice - discount, 47.0)
 
   useTrackVSLView(); // Comentado junto com o VSL
 
@@ -980,7 +788,7 @@ export default function WWESummerSlamQuiz() {
     return (
       <>
         <div className="min-h-screen bg-white flex flex-col">
-          <CompleteHeader onUSPClick={handleUSPClick} />
+          <CompleteHeader />
           <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
           <div className="flex-grow">
             <div className="container mx-auto px-2 py-10">
@@ -991,7 +799,7 @@ export default function WWESummerSlamQuiz() {
               <div className="space-y-10">
                 <div className="animate-scaleIn">
                   {/* <VideoPlayer isReady={true} /> */}
-                  <VideoPlayer isReady={true} />
+                  <VideoPlayer />
                 </div>
 
                 <div className="bg-[#9bdcd2] text-center py-5 px-5 text-sm relative rounded-xl">
@@ -1030,7 +838,7 @@ export default function WWESummerSlamQuiz() {
     return (
       <>
         <div className="min-h-screen bg-white flex flex-col">
-          <CompleteHeader onUSPClick={handleUSPClick} />
+          <CompleteHeader />
           <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
           <div className="flex-grow container mx-auto px-4 py-4">
             <div className="space-y-4">
@@ -1054,7 +862,7 @@ export default function WWESummerSlamQuiz() {
   return (
     <>
       <div className="min-h-screen bg-white flex flex-col">
-        <CompleteHeader onUSPClick={handleUSPClick} />
+        <CompleteHeader />
         <USPPanel isOpen={showUSPPanel} onClose={handleUSPClose} />
         <div className="flex-grow container mx-auto px-1 py-5">
           <SuccessNotification show={showNotification} onClose={() => setShowNotification(false)} />
